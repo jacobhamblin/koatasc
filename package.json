@@ -1,0 +1,26 @@
+{
+  "name": "koatasc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "dependencies": {
+    "gulp-babel": "^5.1.0",
+    "gulp-concat": "^2.5.2",
+    "gulp-uglify": "^1.2.0",
+    "gulp-plumber": "^1.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jacobhamblin/koatasc.git"
+  },
+  "author": "Jacob Hamblin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jacobhamblin/koatasc/issues"
+  },
+  "homepage": "https://github.com/jacobhamblin/koatasc"
+}
