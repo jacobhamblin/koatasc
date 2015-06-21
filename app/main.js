@@ -26,12 +26,18 @@ function init() {
   light.position.set(-100,200,100);
   scene.add(light);
 
-  var loader = new THREE.JSONLoader();
-  loader.load("https://s3-us-west-1.amazonaws.com/koatasc/models/treehouse_logo.js", function (geometry) {
-    var material = new THREE.MeshLambertMaterial({color: 0x55B663});
-    const mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
-  });
+  var geometry = new THREE.TetrahedronGeometry(1, 0);
+  var material = new THREE.MeshDepthMaterial( { wireframe: true } );
+  THREE.pyramid = new THREE.Mesh(geometry, material);
+  scene.add(THREE.pyramid);
+
+  // var colladaLoader = new THREE.ColladaLoader();
+  // var dae = colladaLoader.load(
+  //   'https://s3-us-west-1.amazonaws.com/koatasc/models/orbs.dae',
+  //   function (collada) {
+  //     scene.add(collada.scene );
+  //   });
+
 
   THREE.controls = new THREE.OrbitControls(camera, renderer.domElement);
 }
@@ -39,6 +45,8 @@ function init() {
 function animate() {
   requestAnimationFrame(animate);
 
+  THREE.pyramid.rotation.x += 0.05;
+  THREE.pyramid.rotation.y -= 0.05;
   renderer.render(scene, camera);
   THREE.controls.update();
 }
