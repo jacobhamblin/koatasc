@@ -1,4 +1,4 @@
-TweenMax.to("#logo", 2, {left:600});
+TweenMax.to("#logo", 2, {left:window.innerWidth/2-100});
 
 var scene, camera, renderer;
 
