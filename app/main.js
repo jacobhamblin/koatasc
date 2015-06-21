@@ -17,7 +17,7 @@ function init() {
   document.body.appendChild(renderer.domElement);
 
   camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 0.1, 20000);
-  camera.position.set(0,6,0);
+  camera.position.set(0,10,0);
   scene.add(camera);
 
   renderer.setClearColor(0x333F47, 1);
@@ -27,18 +27,18 @@ function init() {
   scene.add(light);
 
   var loader = new THREE.JSONLoader();
-  loader.load("models/treehouse_logo.js", function (geometry) {
+  loader.load("https://s3-us-west-1.amazonaws.com/koatasc/models/treehouse_logo.js", function (geometry) {
     var material = new THREE.MeshLambertMaterial({color: 0x55B663});
-    mesh = new THERE.Mesh(geometry, material);
+    const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
   });
 
-  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  THREE.controls = new THREE.OrbitControls(camera, renderer.domElement);
 }
 
 function animate() {
   requestAnimationFrame(animate);
 
   renderer.render(scene, camera);
-  controls.update();
+  THREE.controls.update();
 }
