@@ -9,8 +9,8 @@ animate();
 
 function init() {
   scene = new THREE.Scene();
-  var WIDTH = window.innerWidth;
-  var HEIGHT = window.innerHeight;
+  var WIDTH = window.innerWidth - 20;
+  var HEIGHT = window.innerHeight - 20;
 
   renderer = new THREE.WebGLRenderer({antialias:true});
   renderer.setSize(WIDTH, HEIGHT);
