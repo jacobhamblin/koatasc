@@ -390,7 +390,7 @@ function init() {
   light.position.set(0, 10, 0);
   scene.add(light);
 
-  var triangles = Math.floor(Math.random() * 30 + 1);
+  var triangles = Math.floor(Math.random() * 25 + 1);
   THREE.triangles = [];
   for (var i = 0; i < triangles; i++) {
     var radius = Math.random();
@@ -402,6 +402,8 @@ function init() {
     var y = Math.random() * 6;
     var z = Math.random() * 6;
     pyramid.position.set(x - 3, y - 3, z - 3);
+    pyramid.rotX = Math.random() / 5 - 0.1;
+    pyramid.rotY = Math.random() / 5 - 0.1;
     THREE.triangles.push(pyramid);
   }
 
@@ -426,8 +428,11 @@ function animate() {
   requestAnimationFrame(animate);
 
   for (var i = 0; i < THREE.triangles.length; i++) {
-    THREE.triangles[i].rotation.x += 0.05;
-    THREE.triangles[i].rotation.y -= 0.05;
+    // var rotX = (Math.random() /5) - .1;
+    // var rotY = (Math.random() /5) - .1;
+
+    THREE.triangles[i].rotation.x += THREE.triangles[i].rotX;
+    THREE.triangles[i].rotation.y -= THREE.triangles[i].rotY;
   }
   renderer.render(scene, camera);
   THREE.controls.update();
