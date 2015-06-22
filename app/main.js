@@ -18,22 +18,27 @@ function init() {
 
   camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 0.1, 20000);
   camera.position.set(0,10,0);
+  camera.near = 5;
+  camera.far = 15;
   scene.add(camera);
 
-  renderer.setClearColor(0x333F47, 1);
+  renderer.setClearColor(0x111111, 1);
 
-  var light = new THREE.PointLight(0xffffff, 3, 100);
-  light.position.set(0,10,0);
+  // var light = new THREE.AmbientLight(0xffffff, 1, 100);
+  // light.position.set(0,10,0);
+  // scene.add(light);
+
+  var light = new THREE.AmbientLight ( 0x404040 );
   scene.add(light);
 
 
 
-  var triangles = Math.floor((Math.random() * 25) + 1);
+  var triangles = 16;
   THREE.triangles = [];
   for (var i = 0; i < triangles; i++) {
     var radius = Math.random();
     var geometry = new THREE.TetrahedronGeometry(radius, 0);
-    var material = new THREE.MeshDepthMaterial( { wireframe: true } );
+    var material = new THREE.MeshDepthMaterial( { } );
     var pyramid = new THREE.Mesh(geometry, material);
     scene.add(pyramid);
     var x = Math.random() * 6;
@@ -69,11 +74,11 @@ function animate() {
   requestAnimationFrame(animate);
 
   for (var i = 0; i < THREE.triangles.length; i++) {
-    // var rotX = (Math.random() /5) - .1;
-    // var rotY = (Math.random() /5) - .1;
+    var rotX = (Math.random() /5) - .1;
+    var rotY = (Math.random() /5) - .1;
 
-    THREE.triangles[i].rotation.x += THREE.triangles[i].rotX;
-    THREE.triangles[i].rotation.y -= THREE.triangles[i].rotY;
+    THREE.triangles[i].rotation.x += rotX;
+    THREE.triangles[i].rotation.y -= rotY;
   }
   renderer.render(scene, camera);
   THREE.controls.update();
