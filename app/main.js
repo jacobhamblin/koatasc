@@ -63,8 +63,8 @@ function init() {
     var y = Math.random() * 24;
     var z = Math.random() * 24;
     pyramid.position.set(x - 12, y - 12, z - 12);
-    pyramid.rotX = (Math.random() /5) - .1;
-    pyramid.rotY = (Math.random() /5) - .1;
+    pyramid.rotX = (Math.random() * 0.1) - 0.05;
+    pyramid.rotY = (Math.random() * 0.1) - 0.05;
     pyramid.timing = Math.floor(Math.random() * 10);
     THREE.triangles.push(pyramid);
   }
@@ -98,8 +98,8 @@ function animate() {
 
   for (var i = 0; i < THREE.triangles.length; i++) {
     if (Math.round(new Date().getTime() * .001) % THREE.triangles[i].timing == 0) {
-      var rotX = (Math.random() /5) - .1;
-      var rotY = (Math.random() /5) - .1;
+      var rotX = (Math.random() * 0.1) - 0.05;
+      var rotY = (Math.random() * 0.1) - 0.05;
 
       THREE.triangles[i].rotation.x += rotX;
       THREE.triangles[i].rotation.y -= rotY;
