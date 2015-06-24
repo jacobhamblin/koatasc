@@ -360,13 +360,17 @@ THREE.OrbitControls = function (object, domElement) {
 THREE.OrbitControls.prototype = Object.create(THREE.EventDispatcher.prototype);
 
 //state = STATE.PAN;
-"use strict";
+'use strict';
 
-TweenMax.to("#logo", 2, { left: window.innerWidth / 2 - 100 });
+TweenMax.to('#logo', 2, { left: window.innerWidth / 2 - 100 });
 
-var scene, camera, renderer, $viewport, height, width;
-var mX,
-    camerMoveY = 0;
+var scene, camera, renderer, $viewport, height, width, segments;
+var mX = 0;
+var camerMoveY = 0;
+var currentIndex = 0;
+var previousIndex = 0;
+
+segments = [[0, 0, 40], [0, 50, 40]];
 
 window.request;
 
@@ -408,29 +412,102 @@ function init() {
   var light = new THREE.AmbientLight(4210752);
   scene.add(light);
 
-  $viewport.on("mousemove", onMouseMove);
+  jQuery(window).on('resize', resize);
+  $viewport.on('mousemove', mouseMove);
+  $viewport.on('DOMMouseScroll mousewheel', scroll);
+  jQuery(document).on('keydown', keyDown);
 
-  function onMouseMove(event) {
+  function mouseMove(event) {
     mX = event.clientX / window.innerWidth * 2 - 1;
   }
 
-  var triangles = 40;
-  THREE.triangles = [];
-  for (var i = 0; i < triangles; i++) {
-    var radius = Math.random() * 2;
-    var geometry = new THREE.TetrahedronGeometry(radius, 0);
-    var material = new THREE.MeshDepthMaterial({});
-    var pyramid = new THREE.Mesh(geometry, material);
-    scene.add(pyramid);
-    var x = Math.random() * 24;
-    var y = Math.random() * 24;
-    var z = Math.random() * 24;
-    pyramid.position.set(x - 12, y - 12, z - 12);
-    pyramid.rotX = Math.random() * 0.1 - 0.05;
-    pyramid.rotY = Math.random() * 0.1 - 0.05;
-    pyramid.timing = Math.floor(Math.random() * 10);
-    THREE.triangles.push(pyramid);
+  function scroll(event) {
+    event.originalEvent.wheelDelta >= 0 ? prev() : next();
   }
+
+  function prev() {
+    if (currentIndex === 0) {
+      return;
+    }
+    animateCamera(currentIndex - 1);
+  }
+
+  function next() {
+    if (currentIndex === segments.length - 1) {
+      return;
+    }
+    animateCamera(currentIndex + 1);
+  }
+
+  function animateCamera(index) {
+    if (index > currentIndex) {
+      TweenMax.to(camera.position, 2, {
+        x: segments[index][0],
+        y: segments[index][1],
+        z: segments[index][2]
+      });
+      currentIndex = index;
+    } else {
+      TweenMax.to(camera.position, 2, {
+        x: segments[currentIndex - 1][0],
+        y: segments[currentIndex - 1][1],
+        z: segments[currentIndex - 1][2]
+      });
+      currentIndex = index;
+    }
+  }
+
+  function resize() {
+    width = $viewport.width();
+    height = $viewport.height();
+
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(width, height);
+  }
+
+  function keyDown(event) {
+    // if (!isScrolling && isActive) {
+    var keyCode = event.keyCode;
+
+    if (keyCode === 40) {
+      next();
+    } else if (keyCode === 38) {
+      prev();
+    }
+    // }
+  }
+
+  // segment 0
+  addSegmentZero();
+
+  function addSegmentZero() {
+    var trianglesCount = 40;
+    THREE.triangles = [];
+    for (var i = 0; i < trianglesCount; i++) {
+      var radius = Math.random() * 2;
+      var geometry = new THREE.TetrahedronGeometry(radius, 0);
+      var material = new THREE.MeshDepthMaterial({});
+      var pyramid = new THREE.Mesh(geometry, material);
+      scene.add(pyramid);
+      var x = Math.random() * 24;
+      var y = Math.random() * 24;
+      var z = Math.random() * 24;
+      pyramid.position.set(x - 12, y - 12, z - 12);
+      pyramid.rotX = Math.random() * 0.1 - 0.05;
+      pyramid.rotY = Math.random() * 0.1 - 0.05;
+      pyramid.timing = Math.floor(Math.random() * 10);
+      THREE.triangles.push(pyramid);
+    }
+  }
+
+  // segment 1
+  // addSegmentOneLines();
+  //
+  // function addSegmentOne () {
+  //
+  // }
 
   // THREE.pyramid = new THREE.Mesh(geometry, material);
   // THREE.pyramidTwo = new THREE.Mesh(geometry, material);
