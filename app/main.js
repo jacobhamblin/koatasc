@@ -2,7 +2,7 @@ TweenMax.to("#logo", 2, {left:window.innerWidth/2-100});
 
 var scene, camera, renderer, $viewport, height, width, segments;
 var mX = 0;
-var camerMoveY = 0;
+var cameraMoveY = 0;
 var currentIndex = 0;
 var previousIndex = 0;
 
@@ -16,8 +16,8 @@ animate();
 function setViewport($el) {
   $viewport = $el;
 
-  width = window.innerWidth;
-  height = window.innerHeight;
+  width = $viewport.width();
+  height = $viewport.height();
 
   init();
 }
@@ -54,7 +54,7 @@ function init() {
   jQuery(document).on('keydown', keyDown);
 
   function mouseMove (event) {
-    mX = (event.clientX / window.innerWidth) * 2 - 1;
+    mX = (event.clientX / window.innerWidth) * 3 - 1;
   }
 
   function scroll (event) {
@@ -189,8 +189,8 @@ function animate() {
     }
 
   }
-  camera.position.y += Math.cos(camerMoveY) / 50;
-  camerMoveY += 0.02;
+  camera.position.y += Math.cos(cameraMoveY) / 50;
+  cameraMoveY += 0.02;
 
   camera.position.x += ((mX * 5) - camera.position.x) * 0.03;
   renderer.render(scene, camera);
