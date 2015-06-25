@@ -1,12 +1,12 @@
 TweenMax.to("#logo", 2, {left:window.innerWidth/2-100});
 
-var scene, camera, renderer, $viewport, height, width, segments;
+var scene, camera, renderer, $viewport, height, width, SEGMENTS;
 var mX = 0;
 var cameraMoveY = 0;
 var currentIndex = 0;
 var previousIndex = 0;
 
-segments = [[0, 0, 40], [0, 50, 40]];
+SEGMENTS = [[0, 0, 40], [0, 50, 40]];
 
 window.request
 
@@ -39,14 +39,12 @@ function init() {
 
   renderer.setClearColor(0x111111, 1);
 
-  // var light = new THREE.AmbientLight(0xffffff, 1, 100);
-  // light.position.set(0,10,0);
-  // scene.add(light);
+
 
   // light
 
-  var light = new THREE.AmbientLight ( 0x404040 );
-  scene.add(light);
+  // var light = new THREE.AmbientLight ( 0x404040 );
+  // scene.add(light);
 
   jQuery(window).on('resize', resize);
   $viewport.on('mousemove', mouseMove);
@@ -69,7 +67,7 @@ function init() {
   }
 
   function next () {
-    if (currentIndex === segments.length - 1) {
+    if (currentIndex === SEGMENTS.length - 1) {
       return;
     }
     animateCamera(currentIndex + 1);
@@ -78,16 +76,18 @@ function init() {
   function animateCamera (index) {
     if ( index > currentIndex ) {
       TweenMax.to(camera.position, 2, {
-        x: segments[index][0],
-        y: segments[index][1],
-        z: segments[index][2]
+        x: SEGMENTS[index][0],
+        y: SEGMENTS[index][1],
+        z: SEGMENTS[index][2]
       })
       currentIndex = index;
+      var vector = new SEGMENTS[currentIndex]
+      camera.lookAt(vector)
     } else {
       TweenMax.to(camera.position, 2, {
-        x: segments[currentIndex - 1][0],
-        y: segments[currentIndex - 1][1],
-        z: segments[currentIndex - 1][2]
+        x: SEGMENTS[currentIndex - 1][0],
+        y: SEGMENTS[currentIndex - 1][1],
+        z: SEGMENTS[currentIndex - 1][2]
       })
       currentIndex = index;
     }
@@ -137,15 +137,25 @@ function init() {
       pyramid.timing = Math.floor(Math.random() * 10);
       THREE.triangles.push(pyramid);
     }
+    // scene.fog = THREE.Fog( 0x888888, 0.01 );
+    // fog.position.set(0, 0, 0);
   }
 
 
   // segment 1
-  // addSegmentOneLines();
-  //
-  // function addSegmentOne () {
-  //
-  // }
+  addSegmentOne();
+
+  function addSegmentOne () {
+    var light = new THREE.PointLight(0xffffff, 1, 100);
+    light.position.set(0,50,0);
+    scene.add(light);
+
+    var geometry = new THREE.SphereGeometry(5, 32, 32);
+    var material = new THREE.MeshLambertMaterial({ color: 0x888888 });
+    var mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+    mesh.position.set(0, 25, 0);
+  }
 
 
 
