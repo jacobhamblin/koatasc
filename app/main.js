@@ -199,7 +199,7 @@ function init() {
 
   function addSegmentOne (orbImages) {
     var light = new THREE.PointLight(0xffffff, 1, 100);
-    light.position.set(0,50,0);
+    light.position.set(0,50,25);
     scene.add(light);
 
     loadImage("./images/bluGrn1-64.png", orbImages);
