@@ -40,7 +40,7 @@ function init() {
   camera.position.set(0, 0, 40);
   scene.add(camera);
 
-  renderer.setClearColor(0xffffff, 1);
+  renderer.setClearColor(0x000000, 1);
 
 
 
@@ -141,7 +141,7 @@ function init() {
       var height = mat.map.image.height;
       var bubble = new THREE.Sprite(mat);
       var x = (Math.random() * 24) - 12;
-      var y = (Math.random() * 24) - 12;
+      var y = (Math.random() * 24) + 13;
       var z = (Math.random() * 24) - 12;
       bubble.position.set(x, y, z);
       bubble.scale.set(width, height, 1);
