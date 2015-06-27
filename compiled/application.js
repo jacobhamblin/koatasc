@@ -506,6 +506,7 @@ function init() {
           fog: true,
           rotation: rotation
         });
+        var bubble = new THREE.Sprite(mat);
         if (distance === 'close') {
           var x = Math.random() * 5 - 2.5;
           var y = Math.random() * 5 + 22.5;
@@ -518,8 +519,8 @@ function init() {
           var z = Math.random() * 80 + 10;
           var width = mat.map.image.width;
           var newSize = Math.random() * (width * 0.016 * (Math.random() * 4) - 1.5) * (Math.random() * (width * 0.016 * (Math.random() * 4) - 1.5));
+          bubble.newSize = newSize;
         }
-        var bubble = new THREE.Sprite(mat);
         bubble.position.set(x, y, z);
         bubble.scale.set(newSize, newSize, 1);
         scene.add(bubble);
@@ -613,15 +614,16 @@ function animate() {
     }
   }
 
-  // var time = performance.now();
-  //
-  // for ( var i = 0, l = THREE.bubbles.length; i < l; i ++ ) {
-  //
-  //   var object = THREE.bubbles[ i ];
-  //   var scale = Math.sin( ( Math.floor( object.position.x * 133.33) + time ) * 0.002 ) * 0.3 + 1;
-  //   object.scale.set( scale, scale, scale );
-  //
-  // }
+  var time = performance.now();
+
+  for (var i = 0, l = THREE.bubbles.length; i < l; i++) {
+
+    var object = THREE.bubbles[i];
+    if (object.newSize !== undefined) {
+      var scale = Math.sin((Math.floor(object.position.x * 133.33) + time) * 0.001) * 0.3 + object.newSize;
+      object.scale.set(scale, scale, scale);
+    }
+  }
 
   camera.position.y += Math.cos(cameraMoveY) / 50;
   cameraMoveY += 0.02;
