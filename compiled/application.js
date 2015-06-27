@@ -412,7 +412,7 @@ function init() {
 
   jQuery(window).on('resize', resize);
   $viewport.on('mousemove', mouseMove);
-  // $viewport.on('DOMMouseScroll mousewheel', scroll);
+  $viewport.on('DOMMouseScroll mousewheel', scroll);
   jQuery(document).on('keydown', keyDown);
 
   function mouseMove(event) {
@@ -617,8 +617,8 @@ function init() {
 
   THREE.controls = new THREE.OrbitControls(camera, renderer.domElement);
   THREE.controls.center.set(0, 0, 0);
-  // THREE.controls.userRotate = false;
-  // THREE.controls.userZoom = false;
+  THREE.controls.userRotate = false;
+  THREE.controls.userZoom = false;
 }
 
 function animate() {
