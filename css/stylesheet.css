@@ -3,8 +3,3 @@ html, body {
     height: 100%;
     overflow: hidden;
 }
-
-#logo {
-  position: absolute;
-  display: none;
-}

@@ -1,5 +1,3 @@
-TweenMax.to("#logo", 2, {left:window.innerWidth/2-100});
-
 var scene, camera, renderer, $viewport, height, width, SEGMENTS;
 var mX = 0;
 var cameraMoveY = 0;
@@ -8,7 +6,7 @@ var previousIndex = 0;
 var orbImages = [];
 THREE.bubbles = [];
 
-SEGMENTS = [[0, 0, 40], [0, 50, 40]];
+SEGMENTS = [[0, 0, 40], [0, 75, 40]];
 
 
 window.request
@@ -36,7 +34,7 @@ function init() {
 
   // camera
 
-  camera = new THREE.PerspectiveCamera(50, width / height, 20, 45);
+  camera = new THREE.PerspectiveCamera(50, width / height, 20, 75);
   camera.position.set(0, 0, 40);
   scene.add(camera);
 
@@ -140,9 +138,9 @@ function init() {
       var width = mat.map.image.width;
       var height = mat.map.image.height;
       var bubble = new THREE.Sprite(mat);
-      var x = (Math.random() * 24) - 12;
-      var y = (Math.random() * 24) + 13;
-      var z = (Math.random() * 24) - 12;
+      var x = (Math.random() * 30) - 15;
+      var y = (Math.random() * 30) + 30;
+      var z = (Math.random() * 30) - 15;
       bubble.position.set(x, y, z);
       bubble.scale.set(width, height, 1);
       scene.add(bubble);
@@ -162,9 +160,9 @@ function init() {
       var material = new THREE.MeshDepthMaterial( { } );
       var pyramid = new THREE.Mesh(geometry, material);
       scene.add(pyramid);
-      var x = (Math.random() * 24) - 12;
-      var y = (Math.random() * 24) - 12;
-      var z = (Math.random() * 24) - 12;
+      var x = (Math.random() * 30) - 15;
+      var y = (Math.random() * 30) - 15;
+      var z = (Math.random() * 30) - 30;
       pyramid.position.set(x, y, z);
       pyramid.rotX = (Math.random() * 0.1) - 0.05;
       pyramid.rotY = (Math.random() * 0.1) - 0.05;
@@ -180,9 +178,9 @@ function init() {
 
   function addSegmentOne () {
     var imagesLoaded = 0;
-    // var light = new THREE.PointLight(0xffffff, 1, 100);
-    // light.position.set(0,50,0);
-    // scene.add(light);
+    var light = new THREE.PointLight(0xffffff, 1, 100);
+    light.position.set(0,50,0);
+    scene.add(light);
 
     THREE.ImageUtils.crossOrigin = '';
     var map1 = THREE.ImageUtils.loadTexture("./images/bluGrn1-64.png");
