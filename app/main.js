@@ -122,7 +122,6 @@ function init() {
 
   function checkCount (imagesLoaded, collection) {
     if (imagesLoaded === 6) {
-      debugger
       addSprites(75, collection);
     }
   }
@@ -137,12 +136,13 @@ function init() {
       })
       var width = mat.map.image.width;
       var height = mat.map.image.height;
+      var newSize = (Math.random() * ((width * .02) * (Math.random() * 3) - 1.5));
       var bubble = new THREE.Sprite(mat);
       var x = (Math.random() * 30) - 15;
       var y = (Math.random() * 30) + 30;
       var z = (Math.random() * 30) - 15;
       bubble.position.set(x, y, z);
-      bubble.scale.set(width, height, 1);
+      bubble.scale.set(newSize, newSize, 1);
       scene.add(bubble);
       THREE.bubbles.push(bubble);
     }
@@ -184,60 +184,60 @@ function init() {
 
     THREE.ImageUtils.crossOrigin = '';
     var map1 = THREE.ImageUtils.loadTexture("./images/bluGrn1-64.png");
-    var image = document.createElement( 'img' );
-    image.src = "./images/bluGrn1-64.png";
-		image.addEventListener( 'load', function ( event ) {
-      map1.image = image;
+    var image1 = document.createElement( 'img' );
+    image1.src = "./images/bluGrn1-64.png";
+		image1.addEventListener( 'load', function ( event ) {
+      map1.image = image1;
       imagesLoaded ++;
       orbImages.push(map1);
       checkCount (imagesLoaded, orbImages);
     });
 
     var map2 = THREE.ImageUtils.loadTexture("./images/bluGrn2-64.png");
-    var image = document.createElement( 'img' );
-    image.src = "./images/bluGrn2-64.png";
-		image.addEventListener( 'load', function ( event ) {
-      map2.image = image;
+    var image2 = document.createElement( 'img' );
+    image2.src = "./images/bluGrn2-64.png";
+		image2.addEventListener( 'load', function ( event ) {
+      map2.image = image2;
       imagesLoaded ++;
       orbImages.push(map2);
       checkCount (imagesLoaded, orbImages);
     });
 
     var map3 = THREE.ImageUtils.loadTexture("./images/bluGrn3-64.png");
-    var image = document.createElement( 'img' );
-    image.src = "./images/bluGrn3-64.png";
-    image.addEventListener( 'load', function ( event ) {
-      map3.image = image;
+    var image3 = document.createElement( 'img' );
+    image3.src = "./images/bluGrn3-64.png";
+    image3.addEventListener( 'load', function ( event ) {
+      map3.image = image3;
       imagesLoaded ++;
       orbImages.push(map3);
       checkCount (imagesLoaded, orbImages);
     });
 
     var map4 = THREE.ImageUtils.loadTexture("./images/bluGrn4-64.png");
-    var image = document.createElement( 'img' );
-    image.src = "./images/bluGrn4-64.png";
-    image.addEventListener( 'load', function ( event ) {
-      map4.image = image;
+    var image4 = document.createElement( 'img' );
+    image4.src = "./images/bluGrn4-64.png";
+    image4.addEventListener( 'load', function ( event ) {
+      map4.image = image4;
       imagesLoaded ++;
       orbImages.push(map4);
       checkCount (imagesLoaded, orbImages);
     });
 
     var map5 = THREE.ImageUtils.loadTexture("./images/prpl1-64.png");
-    var image = document.createElement( 'img' );
-    image.src = "./images/prpl1-64.png";
-    image.addEventListener( 'load', function ( event ) {
-      map5.image = image;
+    var image5 = document.createElement( 'img' );
+    image5.src = "./images/prpl1-64.png";
+    image5.addEventListener( 'load', function ( event ) {
+      map5.image = image5;
       imagesLoaded ++;
       orbImages.push(map5);
       checkCount (imagesLoaded, orbImages);
     });
 
     var map6 = THREE.ImageUtils.loadTexture("./images/prpl2-64.png");
-    var image = document.createElement( 'img' );
-    image.src = "./images/prpl2-64.png";
-    image.addEventListener( 'load', function ( event ) {
-      map6.image = image;
+    var image6 = document.createElement( 'img' );
+    image6.src = "./images/prpl2-64.png";
+    image6.addEventListener( 'load', function ( event ) {
+      map6.image = image6;
       imagesLoaded ++;
       orbImages.push(map6);
       checkCount (imagesLoaded, orbImages);
@@ -277,15 +277,15 @@ function animate() {
 
   }
 
-  var time = performance.now();
-
-  for ( var i = 0, l = THREE.bubbles.length; i < l; i ++ ) {
-
-    var object = THREE.bubbles[ i ];
-    var scale = Math.sin( ( Math.floor( object.position.x * 133.33) + time ) * 0.002 ) * 0.3 + 1;
-    object.scale.set( scale, scale, scale );
-
-  }
+  // var time = performance.now();
+  //
+  // for ( var i = 0, l = THREE.bubbles.length; i < l; i ++ ) {
+  //
+  //   var object = THREE.bubbles[ i ];
+  //   var scale = Math.sin( ( Math.floor( object.position.x * 133.33) + time ) * 0.002 ) * 0.3 + 1;
+  //   object.scale.set( scale, scale, scale );
+  //
+  // }
 
   camera.position.y += Math.cos(cameraMoveY) / 50;
   cameraMoveY += 0.02;
