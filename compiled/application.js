@@ -370,7 +370,7 @@ var previousIndex = 0;
 var orbImages = [];
 THREE.bubbles = [];
 
-SEGMENTS = [[0, 0, 40], [0, 75, 40]];
+SEGMENTS = [[0, 0, 40], [0, 40, 100]];
 
 window.request;
 
@@ -448,9 +448,9 @@ function init() {
       camera.lookAt(vector);
     } else {
       TweenMax.to(camera.position, 2, {
-        x: SEGMENTS[currentIndex - 1][0],
-        y: SEGMENTS[currentIndex - 1][1],
-        z: SEGMENTS[currentIndex - 1][2]
+        x: SEGMENTS[index][0],
+        y: SEGMENTS[index][1],
+        z: SEGMENTS[index][2]
       });
       currentIndex = index;
       var coords = SEGMENTS[currentIndex];
@@ -483,29 +483,45 @@ function init() {
 
   function checkCount(imagesLoaded, collection) {
     if (imagesLoaded === 6) {
-      addSprites(75, collection);
+      addSprites(125, collection);
     }
   }
 
   function addSprites(imagesLoaded, collection) {
-    for (var i = 0; i < imagesLoaded; i++) {
-      var radius = Math.random() * 2;
-      var mat = new THREE.SpriteMaterial({
-        map: collection[Math.floor(Math.random() * 6)],
-        color: 16777215,
-        fog: true
-      });
-      var width = mat.map.image.width;
-      var height = mat.map.image.height;
-      var newSize = Math.random() * (width * 0.02 * (Math.random() * 3) - 1.5);
-      var bubble = new THREE.Sprite(mat);
-      var x = Math.random() * 30 - 15;
-      var y = Math.random() * 30 + 30;
-      var z = Math.random() * 30 - 15;
-      bubble.position.set(x, y, z);
-      bubble.scale.set(newSize, newSize, 1);
-      scene.add(bubble);
-      THREE.bubbles.push(bubble);
+
+    go(imagesLoaded, collection, 'close');
+    go(imagesLoaded, collection, 'far');
+
+    function go(imagesLoaded, collection, distance) {
+      for (var i = 0; i < imagesLoaded; i++) {
+        var matTexture = Math.floor(Math.random() * 6);
+        var rotation = Math.random() * 6.283;
+        matTexture === 1 ? rotation = 0 : rotation = Math.random() * 6.283;
+        var mat = new THREE.SpriteMaterial({
+          map: collection[matTexture],
+          color: 16777215,
+          fog: true,
+          rotation: rotation
+        });
+        if (distance === 'close') {
+          var x = Math.random() * 5 - 2.5;
+          var y = Math.random() * 5 + 22.5;
+          var z = Math.random() * 5 + 47.5;
+          var width = mat.map.image.width;
+          var newSize = Math.random() * (width * 0.005 * Math.random());
+        } else if (distance === 'far') {
+          var x = Math.random() * 30 - 15;
+          var y = Math.random() * 30 + 10;
+          var z = Math.random() * 80 + 10;
+          var width = mat.map.image.width;
+          var newSize = Math.random() * (width * 0.02 * (Math.random() * 4) - 1.5) * (Math.random() * (width * 0.02 * (Math.random() * 4) - 1.5));
+        }
+        var bubble = new THREE.Sprite(mat);
+        bubble.position.set(x, y, z);
+        bubble.scale.set(newSize, newSize, 1);
+        scene.add(bubble);
+        THREE.bubbles.push(bubble);
+      }
     }
   }
 
@@ -604,11 +620,11 @@ function init() {
       checkCount(imagesLoaded, orbImages);
     });
 
-    var geometry = new THREE.SphereGeometry(5, 32, 32);
+    var geometry = new THREE.SphereGeometry(3, 32, 32);
     var material = new THREE.MeshLambertMaterial({ color: 8947848 });
     var mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
-    mesh.position.set(0, 25, 0);
+    mesh.position.set(0, 25, 50);
   }
 
   // controls
