@@ -282,7 +282,7 @@ function animate() {
   for ( var i = 0, l = THREE.bubbles.length; i < l; i ++ ) {
 
     var object = THREE.bubbles[ i ];
-    var scale = Math.sin( ( Math.floor( object.position.x ) + time ) * 0.002 ) * 0.3 + 1;
+    var scale = Math.sin( ( Math.floor( object.position.x * 133.33) + time ) * 0.002 ) * 0.3 + 1;
     object.scale.set( scale, scale, scale );
 
   }
