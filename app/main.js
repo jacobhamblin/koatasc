@@ -5,8 +5,11 @@ var mX = 0;
 var cameraMoveY = 0;
 var currentIndex = 0;
 var previousIndex = 0;
+var orbImages = [];
+THREE.bubbles = [];
 
 SEGMENTS = [[0, 0, 40], [0, 50, 40]];
+
 
 window.request
 
@@ -27,7 +30,7 @@ function init() {
 
   // renderer
 
-  renderer = new THREE.WebGLRenderer({antialias:true});
+  renderer = new THREE.WebGLRenderer();
   renderer.setSize(width, height);
   $viewport.append(renderer.domElement);
 
@@ -37,7 +40,7 @@ function init() {
   camera.position.set(0, 0, 40);
   scene.add(camera);
 
-  renderer.setClearColor(0x111111, 1);
+  renderer.setClearColor(0xffffff, 1);
 
 
 
@@ -48,7 +51,7 @@ function init() {
 
   jQuery(window).on('resize', resize);
   $viewport.on('mousemove', mouseMove);
-  $viewport.on('DOMMouseScroll mousewheel', scroll);
+  // $viewport.on('DOMMouseScroll mousewheel', scroll);
   jQuery(document).on('keydown', keyDown);
 
   function mouseMove (event) {
@@ -81,8 +84,9 @@ function init() {
         z: SEGMENTS[index][2]
       })
       currentIndex = index;
-      var vector = new SEGMENTS[currentIndex]
-      camera.lookAt(vector)
+      var coords = SEGMENTS[currentIndex];
+      var vector = new THREE.Vector3(coords[0],coords[1],coords[2]);
+      camera.lookAt(vector);
     } else {
       TweenMax.to(camera.position, 2, {
         x: SEGMENTS[currentIndex - 1][0],
@@ -90,6 +94,9 @@ function init() {
         z: SEGMENTS[currentIndex - 1][2]
       })
       currentIndex = index;
+      var coords = SEGMENTS[currentIndex];
+      var vector = new THREE.Vector3(coords[0],coords[1],coords[2]);
+      camera.lookAt(vector);
     }
   }
 
@@ -115,23 +122,50 @@ function init() {
     // }
   }
 
+  function checkCount (imagesLoaded, collection) {
+    if (imagesLoaded === 6) {
+      debugger
+      addSprites(75, collection);
+    }
+  }
+
+  function addSprites(imagesLoaded, collection) {
+    for (var i = 0; i < imagesLoaded; i++) {
+      var radius = Math.random() * 2;
+      var mat = new THREE.SpriteMaterial({
+        map: collection[Math.floor(Math.random() * 6)],
+        color: 0xffffff,
+        fog: true
+      })
+      var width = mat.map.image.width;
+      var height = mat.map.image.height;
+      var bubble = new THREE.Sprite(mat);
+      var x = (Math.random() * 24) - 12;
+      var y = (Math.random() * 24) - 12;
+      var z = (Math.random() * 24) - 12;
+      bubble.position.set(x, y, z);
+      bubble.scale.set(width, height, 1);
+      scene.add(bubble);
+      THREE.bubbles.push(bubble);
+    }
+  }
 
   // segment 0
   addSegmentZero();
 
   function addSegmentZero () {
-    var trianglesCount = 40;
+    var trianglesCount = 20;
     THREE.triangles = [];
     for (var i = 0; i < trianglesCount; i++) {
-      var radius = Math.random() * 2;
+      var radius = Math.random() + 1;
       var geometry = new THREE.TetrahedronGeometry(radius, 0);
       var material = new THREE.MeshDepthMaterial( { } );
       var pyramid = new THREE.Mesh(geometry, material);
       scene.add(pyramid);
-      var x = Math.random() * 24;
-      var y = Math.random() * 24;
-      var z = Math.random() * 24;
-      pyramid.position.set(x - 12, y - 12, z - 12);
+      var x = (Math.random() * 24) - 12;
+      var y = (Math.random() * 24) - 12;
+      var z = (Math.random() * 24) - 12;
+      pyramid.position.set(x, y, z);
       pyramid.rotX = (Math.random() * 0.1) - 0.05;
       pyramid.rotY = (Math.random() * 0.1) - 0.05;
       pyramid.timing = Math.floor(Math.random() * 10);
@@ -141,46 +175,91 @@ function init() {
     // fog.position.set(0, 0, 0);
   }
 
-
   // segment 1
   addSegmentOne();
 
   function addSegmentOne () {
-    var light = new THREE.PointLight(0xffffff, 1, 100);
-    light.position.set(0,50,0);
-    scene.add(light);
+    var imagesLoaded = 0;
+    // var light = new THREE.PointLight(0xffffff, 1, 100);
+    // light.position.set(0,50,0);
+    // scene.add(light);
+
+    THREE.ImageUtils.crossOrigin = '';
+    var map1 = THREE.ImageUtils.loadTexture("./images/bluGrn1-64.png");
+    var image = document.createElement( 'img' );
+    image.src = "./images/bluGrn1-64.png";
+		image.addEventListener( 'load', function ( event ) {
+      map1.image = image;
+      imagesLoaded ++;
+      orbImages.push(map1);
+      checkCount (imagesLoaded, orbImages);
+    });
+
+    var map2 = THREE.ImageUtils.loadTexture("./images/bluGrn2-64.png");
+    var image = document.createElement( 'img' );
+    image.src = "./images/bluGrn2-64.png";
+		image.addEventListener( 'load', function ( event ) {
+      map2.image = image;
+      imagesLoaded ++;
+      orbImages.push(map2);
+      checkCount (imagesLoaded, orbImages);
+    });
+
+    var map3 = THREE.ImageUtils.loadTexture("./images/bluGrn3-64.png");
+    var image = document.createElement( 'img' );
+    image.src = "./images/bluGrn3-64.png";
+    image.addEventListener( 'load', function ( event ) {
+      map3.image = image;
+      imagesLoaded ++;
+      orbImages.push(map3);
+      checkCount (imagesLoaded, orbImages);
+    });
+
+    var map4 = THREE.ImageUtils.loadTexture("./images/bluGrn4-64.png");
+    var image = document.createElement( 'img' );
+    image.src = "./images/bluGrn4-64.png";
+    image.addEventListener( 'load', function ( event ) {
+      map4.image = image;
+      imagesLoaded ++;
+      orbImages.push(map4);
+      checkCount (imagesLoaded, orbImages);
+    });
+
+    var map5 = THREE.ImageUtils.loadTexture("./images/prpl1-64.png");
+    var image = document.createElement( 'img' );
+    image.src = "./images/prpl1-64.png";
+    image.addEventListener( 'load', function ( event ) {
+      map5.image = image;
+      imagesLoaded ++;
+      orbImages.push(map5);
+      checkCount (imagesLoaded, orbImages);
+    });
+
+    var map6 = THREE.ImageUtils.loadTexture("./images/prpl2-64.png");
+    var image = document.createElement( 'img' );
+    image.src = "./images/prpl2-64.png";
+    image.addEventListener( 'load', function ( event ) {
+      map6.image = image;
+      imagesLoaded ++;
+      orbImages.push(map6);
+      checkCount (imagesLoaded, orbImages);
+    });
 
     var geometry = new THREE.SphereGeometry(5, 32, 32);
     var material = new THREE.MeshLambertMaterial({ color: 0x888888 });
     var mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
     mesh.position.set(0, 25, 0);
+
+
   }
-
-
-
-
-
-  // THREE.pyramid = new THREE.Mesh(geometry, material);
-  // THREE.pyramidTwo = new THREE.Mesh(geometry, material);
-  // scene.add(THREE.pyramid);
-  // scene.add(THREE.pyramidTwo);
-  // THREE.pyramidTwo.position.set(2, 2, 2);
-  // THREE.pyramid.position.set(-2, -2, -2);
-
-  // var colladaLoader = new THREE.ColladaLoader();
-  // var dae = colladaLoader.load(
-  //   'https://s3-us-west-1.amazonaws.com/koatasc/models/orbs.dae',
-  //   function (collada) {
-  //     scene.add(collada.scene );
-  //   });
 
   // controls
 
   THREE.controls = new THREE.OrbitControls(camera, renderer.domElement);
   THREE.controls.center.set (0,0,0);
-  THREE.controls.userRotate = false;
-  THREE.controls.userZoom = false;
+  // THREE.controls.userRotate = false;
+  // THREE.controls.userZoom = false;
 }
 
 function animate() {
@@ -199,6 +278,17 @@ function animate() {
     }
 
   }
+
+  var time = performance.now();
+
+  for ( var i = 0, l = THREE.bubbles.length; i < l; i ++ ) {
+
+    var object = THREE.bubbles[ i ];
+    var scale = Math.sin( ( Math.floor( object.position.x ) + time ) * 0.002 ) * 0.3 + 1;
+    object.scale.set( scale, scale, scale );
+
+  }
+
   camera.position.y += Math.cos(cameraMoveY) / 50;
   cameraMoveY += 0.02;
 
