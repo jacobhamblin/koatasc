@@ -514,7 +514,7 @@ function init() {
           var y = Math.random() * 30 + 10;
           var z = Math.random() * 80 + 10;
           var width = mat.map.image.width;
-          var newSize = Math.random() * (width * 0.02 * (Math.random() * 4) - 1.5) * (Math.random() * (width * 0.02 * (Math.random() * 4) - 1.5));
+          var newSize = Math.random() * (width * 0.015 * (Math.random() * 4) - 1.5) * (Math.random() * (width * 0.015 * (Math.random() * 4) - 1.5));
         }
         var bubble = new THREE.Sprite(mat);
         bubble.position.set(x, y, z);
