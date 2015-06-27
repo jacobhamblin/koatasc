@@ -125,7 +125,7 @@ function init() {
   function checkCount (collection, desiredNumber) {
     debugger
     if (collection.length === desiredNumber) {
-      addSprites(125, collection);
+      addSprites(175, collection);
     }
   }
 
@@ -136,7 +136,7 @@ function init() {
 
     function go (numberOfSprites, collection, distance) {
       for (var i = 0; i < numberOfSprites; i++) {
-        var matTexture = Math.floor(Math.random() * 6);
+        var matTexture = Math.floor(Math.random() * 8);
         var rotation = Math.random() * 6.283;
         matTexture === 1 ? rotation = 0 : rotation = Math.random() * 6.283;
         var mat = new THREE.SpriteMaterial({
@@ -156,7 +156,7 @@ function init() {
           var y = (Math.random() * 30) + 10;
           var z = (Math.random() * 80) + 10;
           var width = mat.map.image.width;
-          var newSize = (Math.random() * ((width * .015) * (Math.random() * 4) - 1.5)) * (Math.random() * ((width * .015) * (Math.random() * 4) - 1.5));
+          var newSize = (Math.random() * ((width * .016) * (Math.random() * 4) - 1.5)) * (Math.random() * ((width * .016) * (Math.random() * 4) - 1.5));
         }
         var bubble = new THREE.Sprite(mat);
         bubble.position.set(x, y, z);
@@ -206,8 +206,10 @@ function init() {
     loadImage("./images/bluGrn2-64.png", orbImages);
     loadImage("./images/bluGrn3-64.png", orbImages);
     loadImage("./images/bluGrn4-64.png", orbImages);
+    loadImage("./images/bluGrn5-64.png", orbImages)
     loadImage("./images/prpl1-64.png", orbImages);
     loadImage("./images/prpl2-64.png", orbImages);
+    loadImage("./images/prpl3-64.png", orbImages);
 
     function loadImage (url, orbImages) {
       timesRun++;
@@ -216,7 +218,7 @@ function init() {
       orbPreImages['img' + timesRun].addEventListener('load', function (event) {
         orbImages.push(THREE.ImageUtils.loadTexture(url));
         orbImages[orbImages.length - 1].image = orbPreImages['img' + timesRun];
-        checkCount(orbImages, 6);
+        checkCount(orbImages, 8);
       });
     }
 
