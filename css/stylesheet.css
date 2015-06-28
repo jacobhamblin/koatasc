@@ -2,4 +2,10 @@ html, body {
     margin: 0;
     height: 100%;
     overflow: hidden;
+    background-color: #000;
+    color: #fff;
+}
+
+.load h1 {
+  text-align: center;
 }

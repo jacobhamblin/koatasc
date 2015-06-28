@@ -15,7 +15,6 @@ SEGMENTS = [[0, 0, 40], [0, 50, 100]];
 window.request
 
 setViewport($(document.body));
-animate();
 
 function setViewport($el) {
   $viewport = $el;
@@ -23,7 +22,34 @@ function setViewport($el) {
   width = $viewport.width();
   height = $viewport.height();
 
-  init();
+  function checkCount (collection, desiredNumber) {
+    if (collection.length === desiredNumber) {
+      $('.load').html('');
+      init();
+      animate();
+    }
+  }
+
+  loadImage("./images/bluGrn1-64.png", orbImages);
+  loadImage("./images/bluGrn2-64.png", orbImages);
+  loadImage("./images/bluGrn3-64.png", orbImages);
+  loadImage("./images/bluGrn4-64.png", orbImages);
+  loadImage("./images/bluGrn5-64.png", orbImages)
+  loadImage("./images/prpl1-64.png", orbImages);
+  loadImage("./images/prpl2-64.png", orbImages);
+  loadImage("./images/prpl3-64.png", orbImages);
+
+  function loadImage (url, orbImages) {
+    timesRun++;
+    orbPreImages['img' + timesRun] = document.createElement('img');
+    orbPreImages['img' + timesRun].src = url;
+    orbPreImages['img' + timesRun].addEventListener('load', function (event) {
+      orbImages.push(THREE.ImageUtils.loadTexture(url));
+      orbImages[orbImages.length - 1].image = orbPreImages['img' + timesRun];
+      checkCount(orbImages, 8);
+    });
+  }
+
 }
 
 function init() {
@@ -124,11 +150,7 @@ function init() {
     // }
   }
 
-  function checkCount (collection, desiredNumber) {
-    if (collection.length === desiredNumber) {
-      addSprites(175, collection);
-    }
-  }
+  addSprites(125, orbImages);
 
   function addSprites(numberOfSprites, collection) {
 
@@ -210,26 +232,6 @@ function init() {
     THREE.lightOne = new THREE.PointLight(0xffffff, 2, 50);
     THREE.lightOne.position.set(0,50,25);
     scene.add(THREE.lightOne);
-
-    loadImage("./images/bluGrn1-64.png", orbImages);
-    loadImage("./images/bluGrn2-64.png", orbImages);
-    loadImage("./images/bluGrn3-64.png", orbImages);
-    loadImage("./images/bluGrn4-64.png", orbImages);
-    loadImage("./images/bluGrn5-64.png", orbImages)
-    loadImage("./images/prpl1-64.png", orbImages);
-    loadImage("./images/prpl2-64.png", orbImages);
-    loadImage("./images/prpl3-64.png", orbImages);
-
-    function loadImage (url, orbImages) {
-      timesRun++;
-      orbPreImages['img' + timesRun] = document.createElement('img');
-      orbPreImages['img' + timesRun].src = url;
-      orbPreImages['img' + timesRun].addEventListener('load', function (event) {
-        orbImages.push(THREE.ImageUtils.loadTexture(url));
-        orbImages[orbImages.length - 1].image = orbPreImages['img' + timesRun];
-        checkCount(orbImages, 8);
-      });
-    }
 
     var geometry = new THREE.SphereGeometry(3, 32, 32);
     var material = new THREE.MeshLambertMaterial({ color: 0x888888 });
