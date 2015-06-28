@@ -170,11 +170,11 @@ function init() {
         })
         var bubble = new THREE.Sprite(mat);
         if (distance === 'close') {
-          var x = (Math.random() * 5) - 2.5;
-          var y = (Math.random() * 5) + 22.5;
-          var z = (Math.random() * 5) + 47.5;
+          var x = (Math.random() * 15) - 7.5;
+          var y = (Math.random() * 15) + 17.5;
+          var z = (Math.random() * 15) + 42.5;
           var width = mat.map.image.width;
-          var newSize = (Math.random() * ((width * .005) * Math.random()));
+          var newSize = (Math.random() * ((width * .01) * Math.random()));
         } else if (distance === 'far') {
           var x = (Math.random() * 30) - 15;
           var y = (Math.random() * 30) + 10;
@@ -274,7 +274,7 @@ function animate() {
 
     var object = THREE.bubbles[ i ];
     if (object.newSize !== undefined) {
-      var scale = Math.sin( ( Math.floor( object.position.x * 133.33) + time ) * 0.001 ) * 0.3 + object.newSize;
+      var scale = (Math.cos(cameraMoveY) / 5) + object.newSize;
       object.scale.set( scale, scale, scale );
     }
 
