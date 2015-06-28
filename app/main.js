@@ -1,14 +1,15 @@
 var scene, camera, renderer, $viewport, height, width, SEGMENTS;
-var mX = 0;
 var cameraMoveY = 0;
 var currentIndex = 0;
 var previousIndex = 0;
 var timesRun = 0;
 var orbImages = [];
 var orbPreImages = new Object;
+var mouse = new THREE.Vector2(), INTERSECTED;
+var raycaster = new THREE.Raycaster();
 THREE.bubbles = [];
 
-SEGMENTS = [[0, 0, 40], [0, 40, 100]];
+SEGMENTS = [[0, 0, 40], [0, 50, 100]];
 
 
 window.request
@@ -55,7 +56,8 @@ function init() {
   jQuery(document).on('keydown', keyDown);
 
   function mouseMove (event) {
-    mX = (event.clientX / window.innerWidth) * 3 - 1;
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = (event.clientY / window.innerHeight) * 2 + 1;
   }
 
   function scroll (event) {
@@ -123,7 +125,6 @@ function init() {
   }
 
   function checkCount (collection, desiredNumber) {
-    debugger
     if (collection.length === desiredNumber) {
       addSprites(175, collection);
     }
@@ -138,7 +139,7 @@ function init() {
       for (var i = 0; i < numberOfSprites; i++) {
         var matTexture = Math.floor(Math.random() * 8);
         var rotation = Math.random() * 6.283;
-        matTexture === 1 ? rotation = 0 : rotation = Math.random() * 6.283;
+        matTexture === 1 || matTexture === 7 ? rotation = 0 : rotation = Math.random() * 6.283;
         var mat = new THREE.SpriteMaterial({
           map: collection[matTexture],
           color: 0xffffff,
@@ -174,12 +175,19 @@ function init() {
   addSegmentZero();
 
   function addSegmentZero () {
+    THREE.lightZero = new THREE.PointLight(0xffffff, 2, 30);
+    THREE.lightZero.position.set(0, -10, -10);
+    THREE.lightZero.lookAt(new THREE.Vector3(0,10,0));
+    scene.add(THREE.lightZero);
+
     var trianglesCount = 20;
     THREE.triangles = [];
     for (var i = 0; i < trianglesCount; i++) {
       var radius = Math.random() + 1;
       var geometry = new THREE.TetrahedronGeometry(radius, 0);
-      var material = new THREE.MeshDepthMaterial( { } );
+      var material = new THREE.MeshLambertMaterial({
+        color: 0xffffff,
+        });
       var pyramid = new THREE.Mesh(geometry, material);
       scene.add(pyramid);
       var x = (Math.random() * 30) - 15;
@@ -199,9 +207,9 @@ function init() {
   addSegmentOne(orbImages);
 
   function addSegmentOne (orbImages) {
-    var light = new THREE.PointLight(0xffffff, 1, 100);
-    light.position.set(0,50,25);
-    scene.add(light);
+    THREE.lightOne = new THREE.PointLight(0xffffff, 2, 50);
+    THREE.lightOne.position.set(0,50,25);
+    scene.add(THREE.lightOne);
 
     loadImage("./images/bluGrn1-64.png", orbImages);
     loadImage("./images/bluGrn2-64.png", orbImages);
@@ -228,8 +236,6 @@ function init() {
     var mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
     mesh.position.set(0, 25, 50);
-
-
   }
 
   // controls
@@ -242,6 +248,7 @@ function init() {
 
 function animate() {
   requestAnimationFrame(animate);
+  // mouseOverInteract();
 
   for (var i = 0; i < THREE.triangles.length; i++) {
     if (Math.round(new Date().getTime() * .001) % THREE.triangles[i].timing == 0) {
@@ -257,6 +264,8 @@ function animate() {
 
   }
 
+  // grow, shrink
+
   var time = performance.now();
 
   for ( var i = 0, l = THREE.bubbles.length; i < l; i ++ ) {
@@ -269,10 +278,45 @@ function animate() {
 
   }
 
+  // orb lighting animation
+
+  THREE.lightOne.intensity += Math.cos(cameraMoveY) / 50;
+
+  function mouseOverInteract() {
+      // update the picking ray with the camera and mouse position
+  	raycaster.setFromCamera( mouse, camera );
+
+  	// calculate objects intersecting the picking ray
+  	var intersects = raycaster.intersectObjects( scene.children );
+
+    if ( intersects.length > 0 ) {
+      debugger
+
+			if ( INTERSECTED != intersects[ 0 ].object ) {
+
+				if ( INTERSECTED ) {
+          INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+        }
+				INTERSECTED = intersects[ 0 ].object;
+				INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+				INTERSECTED.material.emissive.setHex( 0xff0000 );
+
+			}
+
+		} else {
+
+			if ( INTERSECTED ) {
+        // INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+      }
+			INTERSECTED = null;
+
+		}
+  }
+
   camera.position.y += Math.cos(cameraMoveY) / 50;
   cameraMoveY += 0.02;
 
-  camera.position.x += ((mX * 5) - camera.position.x) * 0.03;
+  camera.position.x += ((mouse.x * 5) - camera.position.x) * 0.03;
   renderer.render(scene, camera);
   THREE.controls.update();
 }
