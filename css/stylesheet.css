@@ -1,4 +1,12 @@
+@font-face {
+  font-family: 'Helvetica Neue';
+  src: url('https://s3-us-west-1.amazonaws.com/asco-jkh/fonts/helvetica/helvetica-neue/HelveticaNeue.otf');
+}
+
 html, body {
+    font-family: arial;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     margin: 0;
     height: 100%;
     overflow: hidden;
@@ -8,4 +16,98 @@ html, body {
 
 .load h1 {
   text-align: center;
+}
+
+.load {
+  top: 50%;
+  position: relative;
+  transform: translateY(-50%);
+}
+
+.help-icon {
+  font-size: 1.5em;
+  margin: 20px;
+  position: fixed;
+  cursor: auto;
+  z-index: 5;
+}
+
+.help-container {
+  background-color: #000;
+  -webkit-filter: opacity(50%);
+  top: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: none;
+  z-index: 3;
+  transition: display .4s ease;
+}
+
+.help-container.is-active {
+  display: block;
+}
+
+.help-inner {
+  display: none;
+  transition: display .2s ease;
+  z-index: 4;
+  top: 50%;
+  position: relative;
+  transform: translateY(-50%);
+}
+
+.help-inner.is-active {
+  display: block;
+}
+
+.arrow {
+  background-image: url("https://s3-us-west-1.amazonaws.com/asco-jkh/layout/Arrow.svg");
+  width: 50px;
+  height: 50px;
+  background-position: center center;
+  background-size: 30px auto;
+  background-repeat: no-repeat;
+  margin: 0 auto 0 auto;
+}
+
+.up.arrow {
+  top: 50%;
+  position: relative;
+  transform: translateY(-50%);
+  -webkit-transform: rotate(270deg);
+  -moz-transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
+  -o-transform: rotate(270deg);
+  transform: rotate(270deg);
+  -webkit-filter: invert(1.0);
+}
+
+.down.arrow {
+  top: 50%;
+  position: relative;
+  transform: translateY(-50%);
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+  -webkit-filter: invert(1.0);
+}
+
+.help-inner h3 {
+  margin: 40px 0 40px 0;
+  font-weight: lighter;
+  text-align: center;
+  font-size: 1em;
+}
+
+.attention {
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  border: 2px solid #fff;
+  top:14px;
+  left: 7px;
+  position: absolute;
 }

@@ -24,7 +24,17 @@ function setViewport($el) {
 
   function checkCount (collection, desiredNumber) {
     if (collection.length === desiredNumber) {
+      $('.help-icon').click(function () {
+        $('.help-container').toggleClass('is-active');
+        $('.help-inner').toggleClass('is-active');
+      });
+      $('.help-container').click(function (event) {
+        $('.help-container').toggleClass('is-active');
+        $('.help-inner').toggleClass('is-active');
+      })
+
       $('.load').html('');
+
       init();
       animate();
     }
@@ -63,7 +73,7 @@ function init() {
 
   // camera
 
-  camera = new THREE.PerspectiveCamera(50, width / height, 20, 100);
+  camera = new THREE.PerspectiveCamera(50, width / height, 20, 90);
   camera.position.set(0, 0, 40);
   scene.add(camera);
 
@@ -150,9 +160,8 @@ function init() {
     // }
   }
 
-  addSprites(125, orbImages);
 
-  function addSprites(numberOfSprites, collection) {
+  function addSegmentOneSprites(numberOfSprites, collection) {
 
     go(numberOfSprites, collection, 'close');
     go(numberOfSprites, collection, 'far');
@@ -187,19 +196,31 @@ function init() {
         bubble.scale.set(newSize, newSize, 1);
         scene.add(bubble);
         THREE.bubbles.push(bubble);
-        debugger
       }
     }
 
+  }
+
+  function addSegmentOneSpheres () {
+    var geometry = new THREE.SphereGeometry(3, 32, 32);
+    var material = new THREE.MeshLambertMaterial({ color: 0x888888 });
+    var mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+    mesh.position.set(0, 25, 50);
+
+    var geometry = new THREE.SphereGeometry(1, 32, 32);
+    var material = new THREE.MeshLambertMaterial({ color: 0x888888 });
+    var mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+    mesh.position.set(-8, 27, 65);
   }
 
   // segment 0
   addSegmentZero();
 
   function addSegmentZero () {
-    THREE.lightZero = new THREE.PointLight(0xffffff, 2, 30);
-    THREE.lightZero.position.set(0, -10, -10);
-    THREE.lightZero.lookAt(new THREE.Vector3(0,10,0));
+    THREE.lightZero = new THREE.PointLight(0xffffff, 2, 60);
+    THREE.lightZero.position.set(0, 0, 20);
     scene.add(THREE.lightZero);
 
     var trianglesCount = 20;
@@ -233,11 +254,12 @@ function init() {
     THREE.lightOne.position.set(0,50,25);
     scene.add(THREE.lightOne);
 
-    var geometry = new THREE.SphereGeometry(3, 32, 32);
-    var material = new THREE.MeshLambertMaterial({ color: 0x888888 });
-    var mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
-    mesh.position.set(0, 25, 50);
+    THREE.lightTwo = new THREE.PointLight(0xffffff, 1, 10);
+    THREE.lightTwo.position.set(-8, 32, 62);
+    scene.add(THREE.lightTwo);
+
+    addSegmentOneSpheres();
+    addSegmentOneSprites(125, orbImages);
   }
 
   // controls
@@ -279,6 +301,13 @@ function animate() {
     }
 
   }
+
+  // help scroll brightness
+
+  if ($('.help-inner').css('display') === 'block') {
+    $('.down.arrow').css('-webkit-filter', 'invert(' + (Math.cos(cameraMoveY) + 1) + ')');
+  }
+  $('.attention').css('-webkit-filter', 'opacity(' + (Math.cos(cameraMoveY) + 1) + ')');
 
   // orb lighting animation
 
