@@ -374,7 +374,7 @@ var mouse = new THREE.Vector2(),
 var raycaster = new THREE.Raycaster();
 THREE.bubbles = [];
 
-SEGMENTS = [[0, 0, 40], [0, 50, 100]];
+SEGMENTS = [[0, 0, 40], [0, 50, 100], ['link']];
 
 window.request;
 
@@ -464,15 +464,27 @@ function init() {
   function prev() {
     if (currentIndex === 0) {
       return;
+    } else if (currentIndex === SEGMENTS.length - 1) {
+      $('#contact-div').css('top', '100vh');
+      currentIndex = currentIndex - 1;
+    } else {
+      animateCamera(currentIndex - 1);
     }
-    animateCamera(currentIndex - 1);
   }
 
   function next() {
-    if (currentIndex === SEGMENTS.length - 1) {
+    if (currentIndex === SEGMENTS.length - 2) {
+      currentIndex = currentIndex + 1;
+      $('#contact-div').css('top', '95vh');
+      // $(function(){
+      // $viewport.append("<div id='contact-div' style='top: 101vh;'></div>")
+      // $('#contact-div').load("contact.html");
+      // });
+    } else if (currentIndex === SEGMENTS.length - 1) {
       return;
+    } else {
+      animateCamera(currentIndex + 1);
     }
-    animateCamera(currentIndex + 1);
   }
 
   function animateCamera(index) {
