@@ -1,8 +1,3 @@
-@font-face {
-  font-family: 'Helvetica Neue';
-  src: url('https://s3-us-west-1.amazonaws.com/asco-jkh/fonts/helvetica/helvetica-neue/HelveticaNeue.otf');
-}
-
 html, body {
     font-family: arial;
     -webkit-font-smoothing: antialiased;

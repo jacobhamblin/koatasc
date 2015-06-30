@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Hi, I'm Jacob</title>
+  <link rel="stylesheet" href="css/contactStyle.css" type="text/css">
+  <script src="https://s3-us-west-1.amazonaws.com/yasmirtudoachimandirochichi/scripts/wow.min.js"></script>
+  <script src='https://s3-us-west-1.amazonaws.com/yasmirtudoachimandirochichi/scripts/jquery-2.1.4.min.js'></script>
+  <script id='data' type='application/json'>
+    $.getJSON("https://api.github.com/repos/jacobhamblin/koatasc/commits", function(result) {
+      if (!result) {
+        return;
+      } else {
+        return result;
+      }
+    });
+  </script>
+  <link rel="stylesheet" href="css/animate.css">
+  <script>
+   new WOW().init();
+  </script>
+</head>
+<body>
+  <script>
+    $(document).ready(function () {
+      var mod = 0;
+      // window.data = JSON.parse(jQuery("#data").html());
+      animate();
+
+      function animate () {
+        requestAnimationFrame(animate);
+        $('.orb').css('-webkit-filter', 'hue-rotate(' + ((Math.cos(mod) - 1) * 25) + 'deg)');
+
+        mod += .02;
+      }
+    });
+  </script>
+  <div class='container'>
+    <div class='top'>
+      <div class='content'>
+        <h1>Hello</h1>
+        <div class='me'></div>
+        <h2>I'm Jacob, a creative front end and full stack developer.</h2>
+        <p>
+          Front end design is attractive because it allows me to experiment, iterate, and build attractive things.<br/><br/>
+
+          Other parts of the stack provide interesting challenges, like optimizing scalability. I love tackling a difficult problem on a team!<br/><br/>
+
+          I'm on <a href='https://www.linkedin.com/in/jacobhamblin'>LinkedIn</a> and <a href='https://www.github.com/jacobhamblin'>Github</a>. I'm interested in finding my next challenge, so <a href='mailto:jacob@hamblin.cc?subject=Hi&amp;body=Hi Jacob'>send me an email</a> if you'd like to chat.<br/><br/>
+        </p>
+      </div>
+    </div>
+    <div class='mid'>
+      <div class='content'>
+        <h1>About This</h1>
+        <div class='orb'></div>
+        <p>
+          This is my attempt at learning WebGL, which is rather fun with <a href='http://threejs.org/'>Three.js</a> and <a href='http://greensock.com/gsap'>GSAP</a>.<br/>
+          </script>
+          <br/>
+        </p>
+      </div>
+    </div>
+    <div class='bot wow fadeInUp'>
+      <div class='content'>
+        <h1>My Skills</h1>
+        <h2>Javascript</h2>
+        <p>
+          ES5 / ES6<br/>
+        </p>
+        <p>
+          MV* framworks: Backbone.js, React.js <br/>
+          Convenience: jQuery, Underscore.js <br/>
+          WebGL: Three.js <br/>
+          Animation: Tweenlite / TweenMax <br/>
+          Package Manager: npm, bower <br/>
+          Dependencies injection: RequireJS <br/>
+          Build tools: Gulp </br>
+          Features detection: Modernizr <br/>
+          Tests: Jasmine, PhantomJS <br/>
+        </p>
+
+        <h2>Ruby</h2>
+        <p>
+          Ruby 2.1.2
+        </p>
+        <p>
+          MVC framework: Ruby on Rails <br/>
+          Authentication: BCrypt <br/>
+          Tests: RSpec <br/>
+          Database documentation: Annotate <br/>
+        </p>
+
+        <h2>HTML / CSS</h2>
+        <p>
+          HTML5 / CSS3 <br/>
+          SVG <br/>
+        </p>
+        <p>
+          Preprocessors: LESS, SASS <br/>
+          Frameworks: Bootstrap <br/>
+        </p>
+
+        <h2>SQL</h2>
+        <p>
+          PostgreSQL <br/>
+          MySQL <br/>
+        </p>
+
+        <h2>Misc</h2>
+        <p>
+          Version control: Git <br/>
+          Design patterns: MV*, Modules, Singleton <br/>
+          Workflow: Agile <br/>
+          Adobe creative suite: Photoshop, Illustrator, Imageready <br/>
+          3D: Cinema4d <br/>
+        </p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
