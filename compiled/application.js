@@ -366,9 +366,12 @@ var scene, camera, renderer, $viewport, height, width, SEGMENTS;
 var cameraMoveY = 0;
 var currentIndex = 0;
 var previousIndex = 0;
-var timesRun = 0;
+var orbsTimesRun = 0;
+var soundsTimesRun = 0;
 var orbImages = [];
+var transitionSounds = [];
 var orbPreImages = new Object();
+var transitionPreSounds = new Object();
 var mouse = new THREE.Vector2(),
     INTERSECTED;
 var raycaster = new THREE.Raycaster();
@@ -386,8 +389,8 @@ function setViewport($el) {
   width = $viewport.width();
   height = $viewport.height();
 
-  function checkCount(collection, desiredNumber) {
-    if (collection.length === desiredNumber) {
+  function checkCount(orbs, desiredNumberofOrbs) {
+    if (orbs.length === desiredNumberofOrbs) {
       $('.help-icon').click(function () {
         $('.help-container').toggleClass('is-active');
         $('.help-inner').toggleClass('is-active');
@@ -412,14 +415,23 @@ function setViewport($el) {
   loadImage('./images/prpl1-64.png', orbImages);
   loadImage('./images/prpl2-64.png', orbImages);
   loadImage('./images/prpl3-64.png', orbImages);
+  loadAudio('./sounds/rumb.mp3', transitionSounds);
+  loadAudio('./sounds/rumb1.mp3', transitionSounds);
 
-  function loadImage(url, orbImages) {
-    timesRun++;
-    orbPreImages['img' + timesRun] = document.createElement('img');
-    orbPreImages['img' + timesRun].src = url;
-    orbPreImages['img' + timesRun].addEventListener('load', function (event) {
+  function loadAudio(url, transitionSounds, orbImages) {
+    soundsTimesRun++;
+    var fileName = url.match(/(\w+.mp3)/g)[0];
+    transitionPreSounds[fileName] = new Audio(url);
+    transitionSounds.push(transitionPreSounds[fileName]);
+  }
+
+  function loadImage(url, orbImages, transitionSounds) {
+    orbsTimesRun++;
+    orbPreImages['img' + orbsTimesRun] = document.createElement('img');
+    orbPreImages['img' + orbsTimesRun].src = url;
+    orbPreImages['img' + orbsTimesRun].addEventListener('load', function (event) {
       orbImages.push(THREE.ImageUtils.loadTexture(url));
-      orbImages[orbImages.length - 1].image = orbPreImages['img' + timesRun];
+      orbImages[orbImages.length - 1].image = orbPreImages['img' + orbsTimesRun];
       checkCount(orbImages, 8);
     });
   }
@@ -468,6 +480,7 @@ function init() {
       $('#contact-div').css('top', '100vh');
       currentIndex = currentIndex - 1;
     } else {
+      transitionPreSounds['rumb1.mp3'].play();
       animateCamera(currentIndex - 1);
     }
   }
@@ -483,6 +496,7 @@ function init() {
     } else if (currentIndex === SEGMENTS.length - 1) {
       return;
     } else {
+      transitionPreSounds['rumb.mp3'].play();
       animateCamera(currentIndex + 1);
     }
   }
