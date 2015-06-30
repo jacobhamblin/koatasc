@@ -31,7 +31,7 @@ a:visited {
 
 .help-icon {
   font-size: 1.5em;
-  margin: 20px;
+  margin: 27px 34px 27px 34px;
   position: fixed;
   cursor: auto;
   z-index: 5;
@@ -112,8 +112,8 @@ a:visited {
   width: 35px;
   height: 35px;
   border: 2px solid #fff;
-  top:14px;
-  left: 7px;
+  top: 21px;
+  left: 21px;
   position: absolute;
 }
 
