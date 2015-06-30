@@ -608,13 +608,15 @@ function init() {
     THREE.lightZero.position.set(0, 0, 20);
     scene.add(THREE.lightZero);
 
-    var trianglesCount = 20;
+    var trianglesCount = 40;
     THREE.triangles = [];
     for (var i = 0; i < trianglesCount; i++) {
-      var radius = Math.random() + 1;
+      var radius = (Math.random() + 0.5) * (Math.random() + 0.5) * (Math.random() + 0.5) * (Math.random() + 0.5);
       var geometry = new THREE.TetrahedronGeometry(radius, 0);
+      var color = Math.random() * 0.99 * 16777215;
       var material = new THREE.MeshLambertMaterial({
-        color: 16777215
+        color: 16777215,
+        shading: THREE.FlatShading
       });
       var pyramid = new THREE.Mesh(geometry, material);
       scene.add(pyramid);
@@ -622,8 +624,8 @@ function init() {
       var y = Math.random() * 30 - 15;
       var z = Math.random() * 30 - 30;
       pyramid.position.set(x, y, z);
-      pyramid.rotX = Math.random() * 0.1 - 0.05;
-      pyramid.rotY = Math.random() * 0.1 - 0.05;
+      pyramid.rotX = Math.random() * 0.05 - 0.025;
+      pyramid.rotY = Math.random() * 0.05 - 0.025;
       pyramid.timing = Math.floor(Math.random() * 10);
       THREE.triangles.push(pyramid);
     }
@@ -655,14 +657,21 @@ function init() {
   THREE.controls.userZoom = false;
 }
 
+// segment 2
+addSegmentTwo();
+
+function addSegmentTwo() {}
+
 function animate() {
   requestAnimationFrame(animate);
   // mouseOverInteract();
 
+  // spin tetrahedrons, glitch out
+
   for (var i = 0; i < THREE.triangles.length; i++) {
     if (Math.round(new Date().getTime() * 0.001) % THREE.triangles[i].timing == 0) {
-      var rotX = Math.random() * 0.1 - 0.05;
-      var rotY = Math.random() * 0.1 - 0.05;
+      var rotX = Math.random() * 0.05 - 0.025;
+      var rotY = Math.random() * 0.05 - 0.025;
 
       THREE.triangles[i].rotation.x += rotX;
       THREE.triangles[i].rotation.y -= rotY;
@@ -672,7 +681,13 @@ function animate() {
     }
   }
 
-  // grow, shrink
+  // COS move lightZero
+
+  var oscillate = (Math.cos(cameraMoveY) - 1) * 20;
+
+  THREE.lightZero.position.set(oscillate, oscillate, oscillate);
+
+  // orbs grow, shrink
 
   var time = performance.now();
 
