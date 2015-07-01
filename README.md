@@ -2,7 +2,7 @@
 
 WebGL experiment
 
-[live](jacobhamblin.github.io/koatasc)
+[live](http://jacobhamblin.github.io/koatasc)
 
 ## Features
 
