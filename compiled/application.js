@@ -377,7 +377,7 @@ var mouse = new THREE.Vector2(),
 var raycaster = new THREE.Raycaster();
 THREE.bubbles = [];
 
-SEGMENTS = [[0, 0, 40], [0, 50, 100], [0, 0, 200], ['link']];
+SEGMENTS = [[0, 0, 40], [0, 50, 100], ['link']];
 
 window.request;
 
@@ -619,13 +619,14 @@ function init() {
         shading: THREE.FlatShading
       });
       var pyramid = new THREE.Mesh(geometry, material);
+      pyramid.radius = radius;
       scene.add(pyramid);
       var x = Math.random() * 50 - 25;
       var y = Math.random() * 50 - 25;
       var z = Math.random() * 60 - 60;
       pyramid.position.set(x, y, z);
-      pyramid.rotX = Math.random() > 0.5 ? 0.05 - radius * 0.02 : -(0.05 - radius * 0.02);
-      pyramid.rotY = Math.random() > 0.5 ? 0.05 - radius * 0.02 : -(0.05 - radius * 0.02);
+      pyramid.rotX = Math.random() > 0.5 ? 0.05 - pyramid.radius * 0.02 : -(0.05 - pyramid.radius * 0.02);
+      pyramid.rotY = Math.random() > 0.5 ? 0.05 - pyramid.radius * 0.02 : -(0.05 - pyramid.radius * 0.02);
       pyramid.timing = Math.floor(Math.random() * 10);
       THREE.triangles.push(pyramid);
     }
@@ -670,8 +671,8 @@ function animate() {
 
   for (var i = 0; i < THREE.triangles.length; i++) {
     if (Math.round(new Date().getTime() * 0.001) % THREE.triangles[i].timing == 0) {
-      var rotX = Math.random() * 0.05 - 0.025;
-      var rotY = Math.random() * 0.05 - 0.025;
+      var rotX = Math.random() > 0.5 ? 0.05 - THREE.triangles[i].radius * 0.02 : -(0.05 - THREE.triangles[i].radius * 0.02);
+      var rotY = Math.random() > 0.5 ? 0.05 - THREE.triangles[i].radius * 0.02 : -(0.05 - THREE.triangles[i].radius * 0.02);
 
       THREE.triangles[i].rotation.x += rotX;
       THREE.triangles[i].rotation.y -= rotY;
