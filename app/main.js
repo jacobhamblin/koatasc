@@ -1,4 +1,4 @@
-var scene, camera, renderer, $viewport, height, width, SEGMENTS;
+var scene, camera, renderer, $viewport, height, width, SEGMENTS, tetrahedron;
 var cameraMoveY = 0;
 var currentIndex = 0;
 var previousIndex = 0;
@@ -10,9 +10,13 @@ var orbPreImages = new Object;
 var transitionPreSounds = new Object;
 var mouse = new THREE.Vector2(), INTERSECTED;
 var raycaster = new THREE.Raycaster();
+var currentSegThree = 0;
+var numEdgyOrbs = 0;
+var slow = false;
+THREE.edgyOrbPositions = [];
 THREE.bubbles = [];
 
-SEGMENTS = [[0, 0, 40], [0, 50, 100], ['link']];
+SEGMENTS = [[0, 0, 40], [0, 50, 100], [0, 0, 200], ['link']];
 
 
 window.request
@@ -47,7 +51,7 @@ function setViewport($el) {
   loadImage("./images/bluGrn2-64.png", orbImages);
   loadImage("./images/bluGrn3-64.png", orbImages);
   loadImage("./images/bluGrn4-64.png", orbImages);
-  loadImage("./images/bluGrn5-64.png", orbImages)
+  loadImage("./images/bluGrn5-64.png", orbImages);
   loadImage("./images/prpl1-64.png", orbImages);
   loadImage("./images/prpl2-64.png", orbImages);
   loadImage("./images/prpl3-64.png", orbImages);
@@ -293,26 +297,119 @@ function init() {
     addSegmentOneSprites(125, orbImages);
   }
 
+  // segment 2
+  addSegmentTwo();
+
+  function addSegmentTwo () {
+    THREE.lightThree = new THREE.PointLight( 0x66b2b2, 1, 75 );
+    scene.add(THREE.lightThree);
+    THREE.lightFour = new THREE.PointLight( 0x6666ff, 1, 75 );
+    scene.add(THREE.lightFour);
+    THREE.lightFive = new THREE.PointLight( 0x66ff66, 1, 75 );
+    scene.add(THREE.lightFive);
+
+    THREE.edgyOrbs = [];
+    numEdgyOrbs = 256;
+    for (var i = 0; i < numEdgyOrbs; i++) {
+
+      var radius = 0.5;
+      var geometry = new THREE.TetrahedronGeometry(radius, 0);
+      var color = 0xffffff;
+      var material = new THREE.MeshLambertMaterial({
+        color: color,
+        shading: THREE.FlatShading,
+      });
+      var edgyOrb = new THREE.Mesh(geometry, material);
+      scene.add(edgyOrb);
+      var x = (Math.random() * 50) - 25;
+      var y = (Math.random() * 50) - 25;
+      var z = (Math.random() * 100) + 100;
+      edgyOrb.position.set(x, y, z);
+      THREE.edgyOrbPositions.push(x, y, z);
+      THREE.edgyOrbs.push(edgyOrb);
+    }
+
+    transition();
+
+    // Cube
+
+    // var amount = 8;
+    // var separation = 3;
+    // var offset = ( ( amount - 1 ) * separation ) / 2;
+    //
+    // for ( var i = 0; i < numEdgyOrbs; i ++ ) {
+    //
+    //   var x = ( i % amount ) * separation;
+    //   var y = Math.floor( ( i / amount ) % amount ) * separation;
+    //   var z = Math.floor( i / ( amount * amount ) ) * separation;
+    //
+    //   THREE.edgyOrbPositions.push( x - offset, y - offset, z - offset + 160);
+    //
+    // }
+
+    // Sphere
+
+    var radius = 15;
+
+    for ( var i = 0; i < numEdgyOrbs; i ++ ) {
+
+      var phi = Math.acos( -1 + ( 2 * i ) / numEdgyOrbs );
+      var theta = Math.sqrt( numEdgyOrbs * Math.PI ) * phi;
+
+      THREE.edgyOrbPositions.push(
+        radius * Math.cos( theta ) * Math.sin( phi ),
+        radius * Math.sin( theta ) * Math.sin( phi ),
+        (radius * Math.cos( phi )) + 150
+      );
+
+    }
+  }
+
+  function transition() {
+    var offset = currentSegThree * numEdgyOrbs * 3;
+    var duration = 3000;
+    if (currentSegThree === 0) {
+      duration = 25000;
+    }
+
+    for ( var i = 0, j = offset; i < numEdgyOrbs; i++, j += 3 ) {
+
+      var object = THREE.edgyOrbs[ i ];
+
+      new TWEEN.Tween( object.position )
+        .to( {
+          x: THREE.edgyOrbPositions[ j ],
+          y: THREE.edgyOrbPositions[ j + 1 ],
+          z: THREE.edgyOrbPositions[ j + 2 ]
+        }, duration )
+        .easing( TWEEN.Easing.Exponential.InOut )
+        .start();
+
+    }
+
+    new TWEEN.Tween( this )
+      .to( {}, duration )
+      .onComplete( transition )
+      .start();
+
+    currentSegThree = ( currentSegThree + 1 ) % 2;
+  }
+
   // controls
 
   THREE.controls = new THREE.OrbitControls(camera, renderer.domElement);
   THREE.controls.center.set (0,0,0);
   THREE.controls.userRotate = false;
   THREE.controls.userZoom = false;
-}
-
-// segment 2
-addSegmentTwo();
-
-function addSegmentTwo () {
 
 }
+
 
 function animate() {
   requestAnimationFrame(animate);
   // mouseOverInteract();
 
-  // spin tetrahedrons, glitch out
+  // segment 0 spin tetrahedrons, glitch out
 
   for (var i = 0; i < THREE.triangles.length; i++) {
     if (Math.round(new Date().getTime() * .001) % THREE.triangles[i].timing == 0) {
@@ -328,15 +425,13 @@ function animate() {
 
   }
 
-  // COS move lightZero
+  // segment 0 COS move lightZero
 
   var oscillate = ((Math.cos(cameraMoveY) - 1) * 20);
 
   THREE.lightZero.position.set(oscillate + 20, oscillate + 20, oscillate);
 
-  // orbs grow, shrink
-
-  var time = performance.now();
+  // segment 1 orbs grow, shrink
 
   for ( var i = 0, l = THREE.bubbles.length; i < l; i ++ ) {
 
@@ -355,9 +450,36 @@ function animate() {
   }
   $('.attention').css('-webkit-filter', 'opacity(' + (Math.cos(cameraMoveY) + 1) + ')');
 
-  // orb lighting animation
+  // segment 1 orb lighting animation
 
   THREE.lightOne.intensity += Math.cos(cameraMoveY) / 50;
+
+  // segment 2 light movement
+
+  var time = Date.now() * 0.0005;
+
+  THREE.lightThree.position.x = Math.sin( time * 0.7 ) * 30;
+	THREE.lightThree.position.y = Math.cos( time * 0.5 ) * 40;
+	THREE.lightThree.position.z = (Math.cos( time * 0.3 ) * 30) + 190;
+
+	THREE.lightFour.position.x = Math.cos( time * 0.3 ) * 30;
+	THREE.lightFour.position.y = Math.sin( time * 0.5 ) * 40;
+	THREE.lightFour.position.z = (Math.sin( time * 0.7 ) * 30) + 190;
+
+	THREE.lightFive.position.x = Math.sin( time * 0.7 ) * 30;
+	THREE.lightFive.position.y = Math.cos( time * 0.3 ) * 40;
+	THREE.lightFive.position.z = (Math.sin( time * 0.5 ) * 30) + 190;
+
+  // segment 2 tweens
+
+  TWEEN.update();
+
+  // segment 2 tetrahedron spin
+
+  for (var i = 0; i < THREE.edgyOrbs.length; i++) {
+    tetrahedron = THREE.edgyOrbs[i];
+    tetrahedron.rotation.x += .05;
+  }
 
   function mouseOverInteract() {
       // update the picking ray with the camera and mouse position
