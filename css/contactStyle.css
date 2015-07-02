@@ -11,10 +11,10 @@ body {
 }
 
 a {
-  color: #000;
+  color: #232323;
 }
 a:visited {
-  color: #000;
+  color: #232323;
 }
 
 .container {
@@ -28,7 +28,8 @@ a:visited {
 .top {
   padding: 50px 0 50px 0;
   background-color: #fff;
-  color: #000;
+  color: #232323;
+  margin-bottom: 50px;
 }
 
 .top .content {
@@ -52,15 +53,16 @@ h1 {
   height: 400px;
   background-position: center center;
   background-repeat: no-repeat;
-  margin: 0 auto 50px auto;
+  margin: 0 16px 50px auto;
+  float: left;
 }
 
 h2 {
   font-size: 1.2em;
   font-weight: 100;
   letter-spacing: 2px;
-  margin: 40px 0;
-  text-align: center;
+  margin: 50px 0;
+  text-align: left;
 }
 
 p {
@@ -70,8 +72,8 @@ p {
 
 .mid {
   padding: 50px 0 100px 0;
-  background-color: #fff;
-  color: #000;
+  background-color: #eee;
+  color: #232323;
 }
 
 .mid .content {
@@ -92,8 +94,8 @@ p {
 
 .bot {
   padding: 100px 0 50px 0;
-  background-color: #000;
-  color: #fff;
+  background-color: #232323;
+  color: #eee;
 }
 
 .bot .content {
