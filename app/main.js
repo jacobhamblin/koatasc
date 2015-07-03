@@ -207,7 +207,7 @@ function init() {
 
     go(numberOfSprites, collection, 'close');
     go(numberOfSprites, collection, 'far');
-    go(numberOfSprites/2, collection, 'above');
+    go(numberOfSprites/4, collection, 'above');
 
     function go (numberOfSprites, collection, distance) {
       for (var i = 0, j = 0; i < numberOfSprites; i++, j+= 3) {
