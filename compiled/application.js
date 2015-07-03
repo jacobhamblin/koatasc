@@ -564,6 +564,7 @@ function init() {
 
     go(numberOfSprites, collection, 'close');
     go(numberOfSprites, collection, 'far');
+    go(numberOfSprites / 2, collection, 'above');
 
     function go(numberOfSprites, collection, distance) {
       for (var i = 0, j = 0; i < numberOfSprites; i++, j += 3) {
@@ -603,6 +604,12 @@ function init() {
           // var newSize = (Math.random() * ((width * .016) * (Math.random() * 4) - 1.5)) * (Math.random() * ((width * .016) * (Math.random() * 4) - 1.5));
           var newSize = THREE.bubblesProperties.far.size[i];
           bubble.newSize = newSize;
+        } else if (distance === 'above') {
+          var x = Math.random() * 12 - 6;
+          var y = Math.random() * 12 + 26;
+          var z = Math.random() * 15 + 42.5;
+          var width = mat.map.image.width;
+          var newSize = Math.random() * (width * 0.01 * Math.random());
         }
         bubble.matTexture = matTexture;
         bubble.position.set(x, y, z);
