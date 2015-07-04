@@ -347,11 +347,11 @@ function init() {
   addSegmentTwo();
 
   function addSegmentTwo () {
-    THREE.lightThree = new THREE.PointLight( 0x66b2b2, 1, 75 );
+    THREE.lightThree = new THREE.PointLight( 0xff6666, 1, 75 );
     scene.add(THREE.lightThree);
     THREE.lightFour = new THREE.PointLight( 0x6666ff, 1, 75 );
     scene.add(THREE.lightFour);
-    THREE.lightFive = new THREE.PointLight( 0x66ff66, 1, 75 );
+    THREE.lightFive = new THREE.PointLight( 0xb266b2, 1, 75 );
     scene.add(THREE.lightFive);
 
     THREE.edgyOrbs = [];
