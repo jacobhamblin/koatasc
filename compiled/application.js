@@ -461,7 +461,7 @@ function init() {
 
   // camera
 
-  camera = new THREE.PerspectiveCamera(50, width / height, 20, 90);
+  camera = new THREE.PerspectiveCamera(50, width / height, 1, 90);
   camera.position.set(0, 0, 40);
   scene.add(camera);
 
@@ -861,7 +861,8 @@ function animate() {
 
   for (var i = 0; i < THREE.edgyOrbs.length; i++) {
     tetrahedron = THREE.edgyOrbs[i];
-    tetrahedron.rotation.x += 0.05;
+    tetrahedron.rotation.y += 0.025;
+    tetrahedron.rotation.x -= 0.025;
   }
 
   function mouseOverInteract() {
