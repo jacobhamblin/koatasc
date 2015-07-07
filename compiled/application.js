@@ -620,6 +620,24 @@ function init() {
     }
   }
 
+  function addSegmentOneParticles(numberOfParticles) {
+
+    var geometry = new THREE.Geometry();
+    for (var i = 0; i < numberOfParticles; i++) {
+      var vertex = new THREE.Vector3();
+      vertex.x = Math.random() * 12 - 6;
+      vertex.y = Math.random() * 12 + 26;
+      vertex.z = Math.random() * 15 + 42.5;
+      geometry.vertices.push(vertex);
+    }
+
+    var size = Math.random();
+    var mat = new THREE.PointCloudMaterial({ size: size });
+
+    var particle = new THREE.PointCloud(geometry, mat);
+    scene.add(particle);
+  }
+
   function addSegmentOneSpheres() {
     var geometry = new THREE.SphereGeometry(3, 32, 32);
     var material = new THREE.MeshLambertMaterial({ color: 8947848 });
@@ -683,6 +701,7 @@ function init() {
 
     addSegmentOneSpheres();
     addSegmentOneSprites(150, orbImages);
+    addSegmentOneParticles(10);
 
     THREE.spotlight = new THREE.SpotLight(16777215);
     THREE.spotlight.castShadow = true; // only necessary if you want to cast shadows
