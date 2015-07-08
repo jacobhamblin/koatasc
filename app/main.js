@@ -226,6 +226,7 @@ function init() {
         })
         var bubble = new THREE.Sprite(mat);
         if (distance === 'close') {
+          // these values were assigned randomly at one point. I refreshed the page many times and saved the values when I liked the scene the best.
           // var x = (Math.random() * 15) - 7.5;
           // var y = (Math.random() * 15) + 17.5;
           // var z = (Math.random() * 15) + 42.5;
