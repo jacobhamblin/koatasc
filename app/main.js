@@ -350,7 +350,7 @@ function init() {
 
     addSegmentOneSpheres();
     addSegmentOneSprites(150, orbImages);
-    addSegmentOneParticles(10);
+    // addSegmentOneParticles(10);
 
     THREE.spotlight = new THREE.SpotLight( 0xffffff );
     THREE.spotlight.castShadow = true;    // only necessary if you want to cast shadows
