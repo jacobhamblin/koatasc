@@ -392,6 +392,20 @@ THREE.bubblesProperties.far.texture = [0, 1, 5, 3, 0, 5, 3, 1, 1, 1, 5, 4, 3, 1,
 
 SEGMENTS = [[0, 0, 40], [0, 50, 100], [0, 0, 200], ['link']];
 
+function makeNav() {
+  var container = document.getElementsByClassName('nav-container')[0];
+  for (var i = 0; i < SEGMENTS.length; i++) {
+    var div = document.createElement('div');
+    if (i === SEGMENTS.length - 1) {
+      div.className = 'circle-nav';
+    } else {
+      div.className = 'triangle-nav';
+    }
+    container.appendChild(div);
+  }
+  $($('.triangle-nav')[currentIndex]).addClass('active');
+}
+
 window.request;
 
 setViewport($(document.body));
@@ -416,6 +430,7 @@ function setViewport($el) {
       $('.load').html('');
 
       init();
+      makeNav();
       animate();
     }
   }
@@ -477,6 +492,28 @@ function init() {
   $viewport.on('DOMMouseScroll mousewheel', scroll);
   jQuery(document).on('keydown', keyDown);
 
+  $('.nav-container').click(function (e) {
+    var navItems = $('.nav-container').children();
+    for (var i = 0; i < navItems.length; i++) {
+      if (currentIndex !== i) {
+        if (i === navItems.length - 1 && e.target === navItems[i]) {
+          transitionPreSounds['rumb.mp3'].play();
+          animateCamera(i - 1);
+          currentIndex += 1;
+          $('#contact-div').css('top', '95vh');
+          switchNavActive(i);
+        } else if (navItems[i] === e.target) {
+          if (currentIndex === navItems.length - 1) {
+            $('#contact-div').css('top', '100vh');
+          }
+          transitionPreSounds['rumb.mp3'].play();
+          animateCamera(i);
+          switchNavActive(i);
+        }
+      }
+    }
+  });
+
   function mouseMove(event) {
     mouse.x = event.clientX / window.innerWidth * 2 - 1;
     mouse.y = event.clientY / window.innerHeight * 2 + 1;
@@ -496,6 +533,7 @@ function init() {
       transitionPreSounds['rumb1.mp3'].play();
       animateCamera(currentIndex - 1);
     }
+    switchNavActive(-1);
   }
 
   function next() {
@@ -512,30 +550,30 @@ function init() {
       transitionPreSounds['rumb.mp3'].play();
       animateCamera(currentIndex + 1);
     }
+    switchNavActive(1);
+  }
+
+  function switchNavActive(num) {
+    var navs = $('.nav-container').children();
+    for (var i = 0; i < navs.length; i++) {
+      if ($(navs[i]).hasClass('active')) {
+        $(navs[i]).removeClass('active');
+        $(navs[currentIndex]).addClass('active');
+        return;
+      }
+    }
   }
 
   function animateCamera(index) {
-    if (index > currentIndex) {
-      TweenMax.to(camera.position, 2, {
-        x: SEGMENTS[index][0],
-        y: SEGMENTS[index][1],
-        z: SEGMENTS[index][2]
-      });
-      currentIndex = index;
-      var coords = SEGMENTS[currentIndex];
-      var vector = new THREE.Vector3(coords[0], coords[1], coords[2]);
-      camera.lookAt(vector);
-    } else {
-      TweenMax.to(camera.position, 2, {
-        x: SEGMENTS[index][0],
-        y: SEGMENTS[index][1],
-        z: SEGMENTS[index][2]
-      });
-      currentIndex = index;
-      var coords = SEGMENTS[currentIndex];
-      var vector = new THREE.Vector3(coords[0], coords[1], coords[2]);
-      camera.lookAt(vector);
-    }
+    TweenMax.to(camera.position, 2, {
+      x: SEGMENTS[index][0],
+      y: SEGMENTS[index][1],
+      z: SEGMENTS[index][2]
+    });
+    currentIndex = index;
+    var coords = SEGMENTS[currentIndex];
+    var vector = new THREE.Vector3(coords[0], coords[1], coords[2]);
+    camera.lookAt(vector);
   }
 
   function resize() {

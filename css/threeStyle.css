@@ -118,6 +118,48 @@ a:visited {
   position: fixed;
 }
 
+.nav-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  right: 1%;
+  width: 50px;
+  height: 300px;
+  position: fixed;
+  top: 37%;
+}
+
+
+.nav-container .triangle-nav {
+  width: 0;
+  height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-bottom: 15px solid #333;
+  margin: 10px;
+  transition: all .3s ease;
+  cursor: pointer;
+}
+
+.nav-container .triangle-nav.active {
+  border-bottom: 15px solid #fff;
+  transform: rotateZ(-90deg);
+}
+
+.nav-container .circle-nav {
+  margin: 10px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #333;
+  transition: all .3s ease;
+  cursor: pointer;
+}
+
+.nav-container .circle-nav.active {
+  background-color: #fff;
+}
+
 #contact-div {
   opacity: 1.0;
   top: 100vh;
