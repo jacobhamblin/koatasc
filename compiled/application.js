@@ -883,24 +883,39 @@ function init() {
   }
 
   function addSegmentThreeText() {
-    var text = 't h a n k  y o u';
-    var text3d = new THREE.TextGeometry(text, {
-      size: 3,
-      height: 1,
-      curveSegments: 2,
-      font: 'helvetiker'
-    });
-    text3d.computeBoundingBox();
-    var centerOffset = -0.5 * (text3d.boundingBox.max.x - text3d.boundingBox.min.x);
-    var textMaterial = new THREE.MeshLambertMaterial({
-      color: 3355443,
-      overdraw: 0.5
-    });
-    text = new THREE.Mesh(text3d, textMaterial);
-    text.position.x = centerOffset;
-    text.position.y = -77;
-    text.position.z = 150;
-    scene.add(text);
+    addText(1);
+    addText(2);
+
+    function addText(distance) {
+      if (distance === 1) {
+        var text = 't h a n k  y o u';
+        var size = 3;
+        var y = -77;
+        var z = 150;
+      } else if (distance === 2) {
+        var text = 'c o m e  a g a i n';
+        var y = -70;
+        var z = 125;
+        var size = 1;
+      }
+      var text3d = new THREE.TextGeometry(text, {
+        size: size,
+        height: 1,
+        curveSegments: 2,
+        font: 'helvetiker'
+      });
+      text3d.computeBoundingBox();
+      var centerOffset = -0.5 * (text3d.boundingBox.max.x - text3d.boundingBox.min.x);
+      var textMaterial = new THREE.MeshLambertMaterial({
+        color: 3355443,
+        overdraw: 0.5
+      });
+      text = new THREE.Mesh(text3d, textMaterial);
+      text.position.x = centerOffset;
+      text.position.y = y;
+      text.position.z = z;
+      scene.add(text);
+    }
   }
 
   function transition() {
