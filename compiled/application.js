@@ -894,8 +894,8 @@ function init() {
         var z = 150;
       } else if (distance === 2) {
         var text = 'c o m e  a g a i n';
-        var y = -70;
-        var z = 125;
+        var y = -73;
+        var z = 135;
         var size = 1;
       }
       var text3d = new THREE.TextGeometry(text, {
