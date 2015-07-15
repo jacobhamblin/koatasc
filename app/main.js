@@ -435,11 +435,6 @@ function init() {
     THREE.edgyOrbs = [];
     numEdgyOrbs = 256;
     for (var i = 0; i < numEdgyOrbs; i++) {
-      if (i % 2 === 0) {
-        var wireframe = true;
-      } else {
-        var wireframe = false;
-      }
 
       var radius = 0.5;
       var geometry = new THREE.TetrahedronGeometry(radius, 0);
@@ -447,7 +442,6 @@ function init() {
       var material = new THREE.MeshLambertMaterial({
         color: color,
         shading: THREE.FlatShading,
-        wireframe: wireframe,
       });
       var edgyOrb = new THREE.Mesh(geometry, material);
       scene.add(edgyOrb);
@@ -698,6 +692,7 @@ function animate() {
   for (var i = 0; i < THREE.edgyOrbs.length; i++) {
     tetrahedron = THREE.edgyOrbs[i];
     tetrahedron.rotation.x += .025;
+    tetrahedron.rotation.y += .025;
   }
 
   function mouseOverInteract() {
