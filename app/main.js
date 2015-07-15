@@ -627,7 +627,7 @@ function animate() {
 
   var oscillate = ((Math.cos(cameraMoveY) - 1) * 20);
 
-  THREE.lightZero.position.set(oscillate + 20, oscillate + 20, oscillate);
+  THREE.lightZero.position.set(oscillate + 20, 0, oscillate + 20);
 
   // segment 1 orbs grow, shrink
 
