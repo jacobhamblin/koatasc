@@ -118,7 +118,7 @@ function init() {
   camera.position.set(0, 0, 40);
   scene.add(camera);
 
-  renderer.setClearColor(0x000000, 1);
+  renderer.setClearColor(0x020202, 1);
 
 
 
