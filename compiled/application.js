@@ -483,7 +483,7 @@ function init() {
   camera.position.set(0, 0, 40);
   scene.add(camera);
 
-  renderer.setClearColor(0, 1);
+  renderer.setClearColor(263172, 1);
 
   // light
 
