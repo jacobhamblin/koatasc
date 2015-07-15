@@ -369,7 +369,7 @@ function init() {
     addSegmentZeroText();
 
     function addSegmentZeroText() {
-      var text = 'h e l l o';
+      var text = 'w e l c o m e';
       var text3d = new THREE.TextGeometry( text, {
         size: 4,
         height: 1,
