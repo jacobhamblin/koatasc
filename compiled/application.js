@@ -918,6 +918,18 @@ function init() {
     }
   }
 
+  // addInterSegmentTori();
+
+  function addInterSegmentTori() {
+    var geometry = THREE.TorusGeometry(5, 2, 8, 50, Math.PI);
+    var material = new THREE.MeshDepthMaterial();
+    var torus = new THREE.Mesh(geometry, material);
+    torus.position.x = 0;
+    torus.position.y = -50;
+    torus.position.z = 75;
+    scene.add(torus);
+  }
+
   function transition() {
     var offset = currentSegThree * numEdgyOrbs * 3;
     var duration = 3000;
