@@ -48,12 +48,12 @@ h1 {
 }
 
 .me {
-  background-image: url('../images/jacobhamblinvsmall.jpg');
+  background-image: url('../images/meaqu.jpg');
   width: 267px;
   height: 400px;
-  background-position: center center;
+  background-position: -6px center;
   background-repeat: no-repeat;
-  margin: 0 16px 50px auto;
+  margin: 0 25px 50px auto;
   float: left;
 }
 
