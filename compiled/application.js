@@ -523,7 +523,25 @@ function init() {
   }
 
   function scroll(event) {
-    event.originalEvent.wheelDelta >= 0 ? prev() : next();
+    if (!isScrolling()) {
+      event.originalEvent.wheelDelta >= 0 ? prev() : next();
+    }
+  }
+
+  function isScrolling() {
+    if (currentIndex === SEGMENTS.length - 1) {
+      return false;
+    }
+    var coords = SEGMENTS[currentIndex];
+    var cameraPositions = [camera.position.x, camera.position.y, camera.position.z];
+    for (var i = 0; i < coords.length; i++) {
+      var desired = coords[i];
+      var real = cameraPositions[i];
+      if (!(desired - 5 < real && real < desired + 5)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   function prev() {
@@ -590,15 +608,15 @@ function init() {
   }
 
   function keyDown(event) {
-    // if (!isScrolling && isActive) {
-    var keyCode = event.keyCode;
+    if (!isScrolling()) {
+      var keyCode = event.keyCode;
 
-    if (keyCode === 40) {
-      next();
-    } else if (keyCode === 38) {
-      prev();
+      if (keyCode === 40) {
+        next();
+      } else if (keyCode === 38) {
+        prev();
+      }
     }
-    // }
   }
 
   function addSegmentOneSprites(numberOfSprites, collection) {
@@ -916,18 +934,6 @@ function init() {
       text.position.z = z;
       scene.add(text);
     }
-  }
-
-  // addInterSegmentTori();
-
-  function addInterSegmentTori() {
-    var geometry = THREE.TorusGeometry(5, 2, 8, 50, Math.PI);
-    var material = new THREE.MeshDepthMaterial();
-    var torus = new THREE.Mesh(geometry, material);
-    torus.position.x = 0;
-    torus.position.y = -50;
-    torus.position.z = 75;
-    scene.add(torus);
   }
 
   function transition() {
