@@ -357,10 +357,10 @@ function init() {
 
   function addSegmentZero () {
     THREE.lightZero = new THREE.PointLight(0xffffff, 2, 40);
-    THREE.lightZero.position.set(0, 0, 20);
+    THREE.lightZero.position.set(0, 0, 0);
     scene.add(THREE.lightZero);
 
-    var trianglesCount = 80;
+    var trianglesCount = 40;
     THREE.triangles = [];
     for (var i = 0; i < trianglesCount; i++) {
       var radius = ((Math.random() + .5) * (Math.random() + .5) * (Math.random() + .5) * (Math.random() + .5));
@@ -373,9 +373,9 @@ function init() {
       var pyramid = new THREE.Mesh(geometry, material);
       pyramid.radius = radius;
       scene.add(pyramid);
-      var x = (Math.random() * 50) - 25;
-      var y = (Math.random() * 50) - 25;
-      var z = (Math.random() * 60) - 60;
+      var x = (Math.random() * 40) - 20;
+      var y = (Math.random() * 40) - 20;
+      var z = (Math.random() * 80) - 70;
       pyramid.position.set(x, y, z);
       pyramid.rotX = Math.random() > .5 ? .05 - (pyramid.radius * .02) : -(.05 - pyramid.radius * .02);
       pyramid.rotY = Math.random() > .5 ? .05 - (pyramid.radius  * .02) : -(.05 - pyramid.radius * .02);
@@ -626,29 +626,31 @@ function animate() {
   requestAnimationFrame(animate);
   // mouseOverInteract();
 
-  // segment 0 spin tetrahedrons, glitch out
+  // segment 0 spin tetrahedrons, -glitch-out-
 
   for (var i = 0; i < THREE.triangles.length; i++) {
-    if (Math.round(new Date().getTime() * .001) % THREE.triangles[i].timing == 0) {
-      var rotX = Math.random() > .5 ? .05 - (THREE.triangles[i].radius * .02) : -(.05 - THREE.triangles[i].radius * .02);
-      var rotY = Math.random() > .5 ? .05 - (THREE.triangles[i].radius * .02) : -(.05 - THREE.triangles[i].radius * .02);
+    // if (Math.round(new Date().getTime() * .001) % THREE.triangles[i].timing == 0) {
+    //   var rotX = Math.random() > .5 ? .05 - (THREE.triangles[i].radius * .02) : -(.05 - THREE.triangles[i].radius * .02);
+    //   var rotY = Math.random() > .5 ? .05 - (THREE.triangles[i].radius * .02) : -(.05 - THREE.triangles[i].radius * .02);
+    //
+    //   THREE.triangles[i].rotation.x += rotX;
+    //   THREE.triangles[i].rotation.y -= rotY;
+    // } else {
+      THREE.triangles[i].rotation.x += THREE.triangles[i].rotX / 2;
+      THREE.triangles[i].rotation.y -= THREE.triangles[i].rotY / 2;
+      THREE.triangles[i].position.x += ((Math.cos(cameraMoveY) * .01) * Math.random());
 
-      THREE.triangles[i].rotation.x += rotX;
-      THREE.triangles[i].rotation.y -= rotY;
-    } else {
-      THREE.triangles[i].rotation.x += THREE.triangles[i].rotX;
-      THREE.triangles[i].rotation.y -= THREE.triangles[i].rotY;
-    }
+    // }
 
   }
 
   // segment 0 COS move lightZero
 
-  var oscillate = ((Math.cos(cameraMoveY) - 1) * 20);
+  var oscillate = ((Math.cos(cameraMoveY) - 1) * 10);
 
-  THREE.lightZero.position.set(oscillate + 20, 0, oscillate + 20);
+  THREE.lightZero.position.set(oscillate + 10, 0, oscillate + 10);
 
-  // segment 1 orbs grow, shrink
+  // segment 1 orbs grow, shrink, move left, right
 
   for ( var i = 0, l = THREE.bubbles.length; i < l; i ++ ) {
 
@@ -656,6 +658,11 @@ function animate() {
     if (object.newSize !== undefined) {
       var scale = (Math.cos(cameraMoveY) / 5) + object.newSize;
       object.scale.set( scale, scale, scale );
+    }
+    if (i % 2 === 0) {
+      object.position.x += (Math.cos(cameraMoveY) * .005) * (((i % 10) + 1) * .05);
+    } else {
+      object.position.x -= (Math.cos(cameraMoveY) * .005) * (((i % 10) + 1) * .05);
     }
 
   }
@@ -670,6 +677,9 @@ function animate() {
   // segment 1 orb lighting animation
 
   THREE.lightOne.intensity += Math.cos(cameraMoveY) / 50;
+
+  // segment 1 orb movement
+
 
   // segment 2 light movement
 
