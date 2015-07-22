@@ -355,7 +355,7 @@ function init() {
   addSegmentZero();
 
   function addSegmentZero () {
-    THREE.lightZero = new THREE.PointLight(0xffffff, 2, 40);
+    THREE.lightZero = new THREE.PointLight(0xffffff, 4, 40);
     THREE.lightZero.position.set(0, 0, 0);
     scene.add(THREE.lightZero);
 
