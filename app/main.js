@@ -355,7 +355,7 @@ function init() {
   addSegmentZero();
 
   function addSegmentZero () {
-    THREE.lightZero = new THREE.PointLight(0xffffff, 4, 40);
+    THREE.lightZero = new THREE.PointLight(0xffffff, 3, 40);
     THREE.lightZero.position.set(0, 0, 0);
     scene.add(THREE.lightZero);
 
@@ -580,59 +580,6 @@ function init() {
     }
   }
 
-  postProcessing();
-
-  function postProcessing() {
-    renderer.autoClear = false;
-
-    var renderTargetParameters = {
-      minFilter: THREE.LinearFilter,
-      magFilter: THREE.LinearFilter,
-      format: THREE.RGBFormat,
-      stencilBuffer: false
-    }
-
-    var width = $viewport.width();
-    var height = $viewport.height()
-
-    var renderTarget = new THREE.WebGLRenderTarget(
-      width, height, renderTargetParameters
-    );
-
-    var effectSave = new THREE.SavePass(
-      new THREE.WebGLRenderTarget(
-        width, height, renderTargetParameters
-      )
-    );
-
-    var effectBlend = new THREE.ShaderPass(THREE.BlendShader, "tDiffuse1");
-
-    var effectFXAA = new THREE.ShaderPass( THREE.FXAAShader );
-		var effectVignette = new THREE.ShaderPass( THREE.VignetteShader );
-		var effectBleach = new THREE.ShaderPass( THREE.BleachBypassShader );
-		var effectBloom = new THREE.BloomPass( 0.75 );
-
-		effectFXAA.uniforms[ 'resolution' ].value.set( 1 / width, 1 / height );
-
-    var renderModel = new THREE.RenderPass( scene, camera );
-
-		effectVignette.renderToScreen = true;
-
-		THREE.composer = new THREE.EffectComposer( renderer, renderTarget );
-
-		THREE.composer.addPass( renderModel );
-
-		THREE.composer.addPass( effectFXAA );
-
-		THREE.composer.addPass( effectBlend );
-		THREE.composer.addPass( effectSave );
-
-		THREE.composer.addPass( effectBloom );
-		THREE.composer.addPass( effectBleach );
-
-		THREE.composer.addPass( effectVignette );
-  }
-
 
 
   function transition() {
@@ -674,7 +621,6 @@ function init() {
 }
 
 function animate() {
-  debugger
   requestAnimationFrame(animate);
   // mouseOverInteract();
 
@@ -811,19 +757,6 @@ function animate() {
   THREE.controls.update();
 
   camera.position.x += ((mouse.x * 5) - camera.position.x) * 0.03;
-  // renderer.render(scene, camera);
-  if (currentIndex === 0) {
-    renderer.autoClear = false;
-  	renderer.shadowMapEnabled = true;
-
-    renderer.setRenderTarget( null );
-
-  	renderer.clear();
-  	THREE.composer.render( 0.1 );
-
-  	renderer.shadowMapEnabled = false;
-  } else {
-    renderer.render(scene, camera);
-  }
+  renderer.render(scene, camera);
 
 }
