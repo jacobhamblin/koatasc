@@ -22,7 +22,6 @@ var raycaster = new THREE.Raycaster();
 var currentSegThree = 0;
 var numEdgyOrbs = 0;
 
-
 SEGMENTS = [[0, 0, 40], [0, 50, 100], [0, 0, 180], [0, -100, 200], ['link']];
 
 function makeNav() {
@@ -581,6 +580,59 @@ function init() {
     }
   }
 
+  postProcessing();
+
+  function postProcessing() {
+    renderer.autoClear = false;
+
+    var renderTargetParameters = {
+      minFilter: THREE.LinearFilter,
+      magFilter: THREE.LinearFilter,
+      format: THREE.RGBFormat,
+      stencilBuffer: false
+    }
+
+    var width = $viewport.width();
+    var height = $viewport.height()
+
+    var renderTarget = new THREE.WebGLRenderTarget(
+      width, height, renderTargetParameters
+    );
+
+    var effectSave = new THREE.SavePass(
+      new THREE.WebGLRenderTarget(
+        width, height, renderTargetParameters
+      )
+    );
+
+    var effectBlend = new THREE.ShaderPass(THREE.BlendShader, "tDiffuse1");
+
+    var effectFXAA = new THREE.ShaderPass( THREE.FXAAShader );
+		var effectVignette = new THREE.ShaderPass( THREE.VignetteShader );
+		var effectBleach = new THREE.ShaderPass( THREE.BleachBypassShader );
+		var effectBloom = new THREE.BloomPass( 0.75 );
+
+		effectFXAA.uniforms[ 'resolution' ].value.set( 1 / width, 1 / height );
+
+    var renderModel = new THREE.RenderPass( scene, camera );
+
+		effectVignette.renderToScreen = true;
+
+		THREE.composer = new THREE.EffectComposer( renderer, renderTarget );
+
+		THREE.composer.addPass( renderModel );
+
+		THREE.composer.addPass( effectFXAA );
+
+		THREE.composer.addPass( effectBlend );
+		THREE.composer.addPass( effectSave );
+
+		THREE.composer.addPass( effectBloom );
+		THREE.composer.addPass( effectBleach );
+
+		THREE.composer.addPass( effectVignette );
+  }
+
 
 
   function transition() {
@@ -619,10 +671,10 @@ function init() {
   THREE.controls.center.set (0,0,0);
   THREE.controls.userRotate = false;
   THREE.controls.userZoom = false;
-
 }
 
 function animate() {
+  debugger
   requestAnimationFrame(animate);
   // mouseOverInteract();
 
@@ -756,8 +808,22 @@ function animate() {
 
   camera.position.y += Math.cos(cameraMoveY) / 50;
   cameraMoveY += 0.02;
+  THREE.controls.update();
 
   camera.position.x += ((mouse.x * 5) - camera.position.x) * 0.03;
-  renderer.render(scene, camera);
-  THREE.controls.update();
+  // renderer.render(scene, camera);
+  if (currentIndex === 0) {
+    renderer.autoClear = false;
+  	renderer.shadowMapEnabled = true;
+
+    renderer.setRenderTarget( null );
+
+  	renderer.clear();
+  	THREE.composer.render( 0.1 );
+
+  	renderer.shadowMapEnabled = false;
+  } else {
+    renderer.render(scene, camera);
+  }
+
 }
