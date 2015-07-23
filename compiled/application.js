@@ -390,7 +390,7 @@ var raycaster = new THREE.Raycaster();
 var currentSegThree = 0;
 var numEdgyOrbs = 0;
 
-SEGMENTS = [[0, 0, 40], [0, 50, 100], [0, 0, 180], [0, -100, 200], ['link']];
+SEGMENTS = [[0, 0, 50], [0, 0, 125], [0, 0, 200], [0, 0, 275], ['link']];
 
 function makeNav() {
   var container = document.getElementsByClassName('nav-container')[0];
@@ -479,8 +479,9 @@ function init() {
 
   // camera
 
-  camera = new THREE.PerspectiveCamera(50, width / height, 1, 90);
-  camera.position.set(0, 0, 40);
+  camera = new THREE.PerspectiveCamera(50, width / height, 1, 70);
+  var cameraPos = SEGMENTS[currentIndex];
+  camera.position.set(cameraPos[0], cameraPos[1], cameraPos[2]);
   scene.add(camera);
 
   renderer.setClearColor(263172, 1);
@@ -647,8 +648,8 @@ function init() {
           // var y = (Math.random() * 15) + 17.5;
           // var z = (Math.random() * 15) + 42.5;
           var x = THREE.bubblesProperties.close.xyz[j];
-          var y = THREE.bubblesProperties.close.xyz[j + 1];
-          var z = THREE.bubblesProperties.close.xyz[j + 2];
+          var y = THREE.bubblesProperties.close.xyz[j + 1] - 25;
+          var z = THREE.bubblesProperties.close.xyz[j + 2] + 25;
           var width = mat.map.image.width;
           // var newSize = (Math.random() * ((width * .01) * Math.random()));
           var newSize = THREE.bubblesProperties.close.size[i];
@@ -658,16 +659,16 @@ function init() {
           // var y = (Math.random() * 30) + 10;
           // var z = (Math.random() * 80) + 10;
           var x = THREE.bubblesProperties.far.xyz[j];
-          var y = THREE.bubblesProperties.far.xyz[j + 1];
-          var z = THREE.bubblesProperties.far.xyz[j + 2];
+          var y = THREE.bubblesProperties.far.xyz[j + 1] - 25;
+          var z = THREE.bubblesProperties.far.xyz[j + 2] + 30;
           var width = mat.map.image.width;
           // var newSize = (Math.random() * ((width * .016) * (Math.random() * 4) - 1.5)) * (Math.random() * ((width * .016) * (Math.random() * 4) - 1.5));
           var newSize = THREE.bubblesProperties.far.size[i];
           bubble.newSize = newSize;
         } else if (distance === 'above') {
           var x = Math.random() * 12 - 6;
-          var y = Math.random() * 12 + 26;
-          var z = Math.random() * 15 + 42.5;
+          var y = Math.random() * 12 - 6;
+          var z = Math.random() * 15 + 59.5;
           var width = mat.map.image.width;
           var newSize = Math.random() * (width * 0.01 * Math.random());
         }
@@ -703,14 +704,14 @@ function init() {
     var material = new THREE.MeshLambertMaterial({ color: 8947848 });
     var mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
-    mesh.position.set(0, 25, 50);
+    mesh.position.set(0, 0, 67);
     THREE.bigSphereSegmentOne = mesh;
 
     var geometry = new THREE.SphereGeometry(1, 32, 32);
     var material = new THREE.MeshLambertMaterial({ color: 8947848 });
     var mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
-    mesh.position.set(-8, 27, 65);
+    mesh.position.set(-8, -5, 80);
   }
 
   // segment 0
@@ -736,7 +737,7 @@ function init() {
       scene.add(pyramid);
       var x = Math.random() * 40 - 20;
       var y = Math.random() * 40 - 20;
-      var z = Math.random() * 80 - 70;
+      var z = Math.random() * 80 - 50;
       pyramid.position.set(x, y, z);
       pyramid.rotX = Math.random() > 0.5 ? 0.05 - pyramid.radius * 0.02 : -(0.05 - pyramid.radius * 0.02);
       pyramid.rotY = Math.random() > 0.5 ? 0.05 - pyramid.radius * 0.02 : -(0.05 - pyramid.radius * 0.02);
@@ -763,7 +764,7 @@ function init() {
       text = new THREE.Mesh(text3d, textMaterial);
       text.position.x = centerOffset;
       text.position.y = 0;
-      text.position.z = -20;
+      text.position.z = -10;
       scene.add(text);
     }
     // scene.fog = THREE.Fog( 0x888888, 0.01 );
@@ -775,11 +776,11 @@ function init() {
 
   function addSegmentOne(orbImages) {
     THREE.lightOne = new THREE.PointLight(16777215, 1, 30);
-    THREE.lightOne.position.set(0, 40, 50);
+    THREE.lightOne.position.set(0, 15, 73);
     scene.add(THREE.lightOne);
 
     THREE.lightTwo = new THREE.PointLight(16777215, 2, 10);
-    THREE.lightTwo.position.set(-8, 32, 62);
+    THREE.lightTwo.position.set(-8, 7, 80);
     scene.add(THREE.lightTwo);
 
     addSegmentOneSpheres();
@@ -824,7 +825,7 @@ function init() {
       scene.add(edgyOrb);
       var x = Math.random() * 50 - 25;
       var y = Math.random() * 50 - 25;
-      var z = Math.random() * 100 + 80;
+      var z = Math.random() * 75 + 122.5;
       edgyOrb.position.set(x, y, z);
       THREE.edgyOrbPositions.push(x, y, z);
       THREE.edgyOrbs.push(edgyOrb);
@@ -857,7 +858,7 @@ function init() {
       var phi = Math.acos(-1 + 2 * i / numEdgyOrbs);
       var theta = Math.sqrt(numEdgyOrbs * Math.PI) * phi;
 
-      THREE.edgyOrbPositions.push(radius * Math.cos(theta) * Math.sin(phi), radius * Math.sin(theta) * Math.sin(phi), radius * Math.cos(phi) + 130);
+      THREE.edgyOrbPositions.push(radius * Math.cos(theta) * Math.sin(phi), radius * Math.sin(theta) * Math.sin(phi), radius * Math.cos(phi) + 150);
     }
   }
 
@@ -880,8 +881,8 @@ function init() {
         });
         var bubble = new THREE.Sprite(mat);
         var x = Math.random() * 40 - 20;
-        var y = Math.random() * 40 - 95;
-        var z = Math.random() * 50 + 125;
+        var y = Math.random() * 40 - 20;
+        var z = Math.random() * 50 + 200;
         var width = mat.map.image.width;
         var newSize = Math.random() * (width * 0.016 * (Math.random() * 4) - 1.5) * (Math.random() * (width * 0.016 * (Math.random() * 4) - 1.5));
         bubble.matTexture = matTexture;
@@ -908,12 +909,12 @@ function init() {
       if (distance === 1) {
         var text = 't h a n k  y o u';
         var size = 3;
-        var y = -77;
-        var z = 150;
+        var y = 0;
+        var z = 225;
       } else if (distance === 2) {
         var text = 'c o m e  a g a i n';
-        var y = -73;
-        var z = 135;
+        var y = -4;
+        var z = 210;
         var size = 1;
       }
       var text3d = new THREE.TextGeometry(text, {
@@ -992,7 +993,7 @@ function animate() {
 
   var oscillate = (Math.cos(cameraMoveY) - 1) * 10;
 
-  THREE.lightZero.position.set(oscillate + 10, 0, oscillate + 10);
+  THREE.lightZero.position.set(oscillate + 10, 0, oscillate + 20);
 
   // segment 1 orbs grow, shrink, move left, right
 
@@ -1029,29 +1030,29 @@ function animate() {
 
   THREE.lightThree.position.x = Math.sin(time * 0.7) * 30;
   THREE.lightThree.position.y = Math.cos(time * 0.5) * 40;
-  THREE.lightThree.position.z = Math.cos(time * 0.3) * 30 + 170;
+  THREE.lightThree.position.z = Math.cos(time * 0.3) * 30 + 190;
 
   THREE.lightFour.position.x = Math.cos(time * 0.3) * 30;
   THREE.lightFour.position.y = Math.sin(time * 0.5) * 40;
-  THREE.lightFour.position.z = Math.sin(time * 0.7) * 30 + 170;
+  THREE.lightFour.position.z = Math.sin(time * 0.7) * 30 + 190;
 
   THREE.lightFive.position.x = Math.sin(time * 0.7) * 30;
   THREE.lightFive.position.y = Math.cos(time * 0.3) * 40;
-  THREE.lightFive.position.z = Math.sin(time * 0.5) * 30 + 170;
+  THREE.lightFive.position.z = Math.sin(time * 0.5) * 30 + 190;
 
   // segment 3 light movement
 
   THREE.lightSix.position.x = Math.sin(time * 0.7) * 30;
-  THREE.lightSix.position.y = Math.cos(time * 0.5) * 40 - 100;
-  THREE.lightSix.position.z = Math.cos(time * 0.3) * 30 + 190;
+  THREE.lightSix.position.y = Math.cos(time * 0.5) * 40 - 20;
+  THREE.lightSix.position.z = Math.cos(time * 0.3) * 30 + 260;
 
   THREE.lightSeven.position.x = Math.cos(time * 0.3) * 30;
-  THREE.lightSeven.position.y = Math.sin(time * 0.5) * 40 - 100;
-  THREE.lightSeven.position.z = Math.sin(time * 0.7) * 30 + 190;
+  THREE.lightSeven.position.y = Math.sin(time * 0.5) * 40 - 20;
+  THREE.lightSeven.position.z = Math.sin(time * 0.7) * 30 + 260;
 
   THREE.lightEight.position.x = Math.sin(time * 0.7) * 30;
-  THREE.lightEight.position.y = Math.cos(time * 0.3) * 40 - 100;
-  THREE.lightEight.position.z = Math.sin(time * 0.5) * 30 + 190;
+  THREE.lightEight.position.y = Math.cos(time * 0.3) * 40 - 20;
+  THREE.lightEight.position.z = Math.sin(time * 0.5) * 30 + 260;
 
   // segment 2 tweens
 
