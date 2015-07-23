@@ -389,84 +389,13 @@ var mouse = new THREE.Vector2(),
 var raycaster = new THREE.Raycaster();
 var currentSegThree = 0;
 var numEdgyOrbs = 0;
+var isLoaded = false;
 
 SEGMENTS = [[0, 0, 50], [0, 0, 125], [0, 0, 200], [0, 0, 275], ['link']];
-
-function makeNav() {
-  var container = document.getElementsByClassName('nav-container')[0];
-  for (var i = 0; i < SEGMENTS.length; i++) {
-    var div = document.createElement('div');
-    if (i === SEGMENTS.length - 1) {
-      div.className = 'circle-nav';
-    } else {
-      div.className = 'triangle-nav';
-    }
-    container.appendChild(div);
-  }
-  $($('.triangle-nav')[currentIndex]).addClass('active');
-}
 
 window.request;
 
 setViewport($(document.body));
-
-function setViewport($el) {
-  $viewport = $el;
-
-  width = $viewport.width();
-  height = $viewport.height();
-
-  function checkCount(orbs, sum, orbsTwo, sumTwo) {
-    if (orbs.length === sum && orbsTwo.length === sumTwo) {
-      $('.help-icon').click(function () {
-        $('.help-container').toggleClass('is-active');
-        $('.help-inner').toggleClass('is-active');
-      });
-      $('.help-container').click(function (event) {
-        $('.help-container').toggleClass('is-active');
-        $('.help-inner').toggleClass('is-active');
-      });
-
-      $('.load').html('');
-
-      init();
-      makeNav();
-      animate();
-    }
-  }
-  loadImages(unloadedImageCollections, loadedImageCollections, imageHashCollections, counters);
-
-  loadAudio('./sounds/rumb.mp3', transitionSounds);
-  loadAudio('./sounds/rumb1.mp3', transitionSounds);
-
-  function loadImages(unloadedCols, loadedCols, hashCols, counters) {
-    for (var i = 0; i < unloadedCols.length; i++) {
-      var collection = unloadedCols[i];
-      for (var j = 0; j < collection.length; j++) {
-        var file = collection[j];
-        loadImage('./images/' + file, loadedCols[i], hashCols[i], counters[i]);
-      }
-    }
-  }
-
-  function loadAudio(url, transitionSounds) {
-    soundsTimesRun++;
-    var fileName = url.match(/(\w+.mp3)/g)[0];
-    transitionPreSounds[fileName] = new Audio(url);
-    transitionSounds.push(transitionPreSounds[fileName]);
-  }
-
-  function loadImage(url, curCollection, orbObject, counter) {
-    counter++;
-    orbObject['img' + counter] = document.createElement('img');
-    orbObject['img' + counter].src = url;
-    orbObject['img' + counter].addEventListener('load', function (event) {
-      curCollection.push(THREE.ImageUtils.loadTexture(url));
-      curCollection[curCollection.length - 1].image = orbObject['img' + counter];
-      checkCount(orbImages, orbsUnloaded.length, orbImagesTwo, orbsUnloadedTwo.length);
-    });
-  }
-}
 
 function init() {
   scene = new THREE.Scene();
@@ -480,47 +409,148 @@ function init() {
   // camera
 
   camera = new THREE.PerspectiveCamera(50, width / height, 1, 70);
-  var cameraPos = SEGMENTS[currentIndex];
-  camera.position.set(cameraPos[0], cameraPos[1], cameraPos[2]);
+  camera.position.set(0, 0, -70);
   scene.add(camera);
 
   renderer.setClearColor(263172, 1);
 
+  // loading tetrahedron
+
+  var radius = 1;
+  var geometry = new THREE.TetrahedronGeometry(radius, 0);
+  var color = 16777215;
+  var material = new THREE.MeshLambertMaterial({
+    color: color,
+    shading: THREE.FlatShading
+  });
+  THREE.loadingTetra = new THREE.Mesh(geometry, material);
+  scene.add(THREE.loadingTetra);
+  THREE.loadingTetra.position.set(0, 0, -100);
+
   // light
 
-  // var light = new THREE.AmbientLight ( 0x404040 );
-  // scene.add(light);
-
-  jQuery(window).on('resize', resize);
-  $viewport.on('mousemove', mouseMove);
-  $viewport.on('DOMMouseScroll mousewheel', scroll);
-  jQuery(document).on('keydown', keyDown);
-
-  $('.nav-container').click(function (e) {
-    var navItems = $('.nav-container').children();
-    for (var i = 0; i < navItems.length; i++) {
-      if (currentIndex !== i) {
-        if (i === navItems.length - 1 && e.target === navItems[i]) {
-          transitionPreSounds['rumb.mp3'].play();
-          animateCamera(i - 1);
-          currentIndex += 1;
-          $('#contact-div').css('top', '95vh');
-          switchNavActive(i);
-        } else if (navItems[i] === e.target) {
-          if (currentIndex === navItems.length - 1) {
-            $('#contact-div').css('top', '100vh');
-          }
-          transitionPreSounds['rumb.mp3'].play();
-          animateCamera(i);
-          switchNavActive(i);
-        }
-      }
-    }
-  });
+  var light = new THREE.PointLight(16777215, 2, 30);
+  light.position.set(0, 10, -90);
+  scene.add(light);
 
   function mouseMove(event) {
     mouse.x = event.clientX / window.innerWidth * 2 - 1;
     mouse.y = event.clientY / window.innerHeight * 2 + 1;
+  }
+
+  function resize() {
+    width = $viewport.width();
+    height = $viewport.height();
+
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(width, height);
+  }
+
+  jQuery(window).on('resize', resize);
+  $viewport.on('mousemove', mouseMove);
+
+  // controls
+
+  THREE.controls = new THREE.OrbitControls(camera, renderer.domElement);
+  THREE.controls.center.set(0, 0, -100);
+  THREE.controls.userRotate = false;
+  THREE.controls.userZoom = false;
+
+  function loadingAnimate() {
+    if (!isLoaded) {
+      requestAnimationFrame(loadingAnimate);
+
+      THREE.loadingTetra.rotation.x += 0.02;
+
+      camera.position.y += Math.cos(cameraMoveY) / 50;
+      cameraMoveY += 0.02;
+      THREE.controls.update();
+
+      camera.position.x += (mouse.x * 5 - camera.position.x) * 0.03;
+      renderer.render(scene, camera);
+    }
+  }
+
+  loadingAnimate();
+}
+
+init();
+loadImages(unloadedImageCollections, loadedImageCollections, imageHashCollections, counters);
+
+loadAudio('./sounds/rumb.mp3', transitionSounds);
+loadAudio('./sounds/rumb1.mp3', transitionSounds);
+
+function setViewport($el) {
+  $viewport = $el;
+
+  width = $viewport.width();
+  height = $viewport.height();
+}
+
+function checkCount(orbs, sum, orbsTwo, sumTwo) {
+  if (orbs.length === sum && orbsTwo.length === sumTwo) {
+    $('.help-icon').click(function () {
+      $('.help-container').toggleClass('is-active');
+      $('.help-inner').toggleClass('is-active');
+    });
+    $('.help-container').click(function (event) {
+      $('.help-container').toggleClass('is-active');
+      $('.help-inner').toggleClass('is-active');
+    });
+
+    loaded();
+    animate();
+  }
+}
+
+function loadImages(unloadedCols, loadedCols, hashCols, counters) {
+  for (var i = 0; i < unloadedCols.length; i++) {
+    var collection = unloadedCols[i];
+    for (var j = 0; j < collection.length; j++) {
+      var file = collection[j];
+      loadImage('./images/' + file, loadedCols[i], hashCols[i], counters[i]);
+    }
+  }
+}
+
+function loadAudio(url, transitionSounds) {
+  soundsTimesRun++;
+  var fileName = url.match(/(\w+.mp3)/g)[0];
+  transitionPreSounds[fileName] = new Audio(url);
+  transitionSounds.push(transitionPreSounds[fileName]);
+}
+
+function loadImage(url, curCollection, orbObject, counter) {
+  counter++;
+  orbObject['img' + counter] = document.createElement('img');
+  orbObject['img' + counter].src = url;
+  orbObject['img' + counter].addEventListener('load', function (event) {
+    curCollection.push(THREE.ImageUtils.loadTexture(url));
+    curCollection[curCollection.length - 1].image = orbObject['img' + counter];
+    checkCount(orbImages, orbsUnloaded.length, orbImagesTwo, orbsUnloadedTwo.length);
+  });
+}
+
+function loaded() {
+  makeNav();
+  $viewport.on('DOMMouseScroll mousewheel', scroll);
+  jQuery(document).on('keydown', keyDown);
+
+  function animateCamera(index, speed) {
+    if (speed === undefined) {
+      speed = 2;
+    }
+    TweenMax.to(camera.position, speed, {
+      x: SEGMENTS[index][0],
+      y: SEGMENTS[index][1],
+      z: SEGMENTS[index][2]
+    });
+    currentIndex = index;
+    var coords = SEGMENTS[currentIndex];
+    var vector = new THREE.Vector3(coords[0], coords[1], coords[2]);
+    camera.lookAt(vector);
   }
 
   function scroll(event) {
@@ -586,27 +616,41 @@ function init() {
     }
   }
 
-  function animateCamera(index) {
-    TweenMax.to(camera.position, 2, {
-      x: SEGMENTS[index][0],
-      y: SEGMENTS[index][1],
-      z: SEGMENTS[index][2]
-    });
-    currentIndex = index;
-    var coords = SEGMENTS[currentIndex];
-    var vector = new THREE.Vector3(coords[0], coords[1], coords[2]);
-    camera.lookAt(vector);
+  function makeNav() {
+    var container = document.getElementsByClassName('nav-container')[0];
+    for (var i = 0; i < SEGMENTS.length; i++) {
+      var div = document.createElement('div');
+      if (i === SEGMENTS.length - 1) {
+        div.className = 'circle-nav';
+      } else {
+        div.className = 'triangle-nav';
+      }
+      container.appendChild(div);
+    }
+    $($('.triangle-nav')[currentIndex]).addClass('active');
   }
 
-  function resize() {
-    width = $viewport.width();
-    height = $viewport.height();
-
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
-
-    renderer.setSize(width, height);
-  }
+  $('.nav-container').click(function (e) {
+    var navItems = $('.nav-container').children();
+    for (var i = 0; i < navItems.length; i++) {
+      if (currentIndex !== i) {
+        if (i === navItems.length - 1 && e.target === navItems[i]) {
+          transitionPreSounds['rumb.mp3'].play();
+          animateCamera(i - 1);
+          currentIndex += 1;
+          $('#contact-div').css('top', '95vh');
+          switchNavActive(i);
+        } else if (navItems[i] === e.target) {
+          if (currentIndex === navItems.length - 1) {
+            $('#contact-div').css('top', '100vh');
+          }
+          transitionPreSounds['rumb.mp3'].play();
+          animateCamera(i);
+          switchNavActive(i);
+        }
+      }
+    }
+  });
 
   function keyDown(event) {
     if (!isScrolling()) {
@@ -815,6 +859,7 @@ function init() {
     for (var i = 0; i < numEdgyOrbs; i++) {
 
       var radius = 0.5;
+
       var geometry = new THREE.TetrahedronGeometry(radius, 0);
       var color = 16777215;
       var material = new THREE.MeshLambertMaterial({
@@ -829,6 +874,29 @@ function init() {
       edgyOrb.position.set(x, y, z);
       THREE.edgyOrbPositions.push(x, y, z);
       THREE.edgyOrbs.push(edgyOrb);
+    }
+
+    function transition() {
+      var offset = currentSegThree * numEdgyOrbs * 3;
+      var duration = 3000;
+      if (currentSegThree === 0) {
+        duration = 25000;
+      }
+
+      for (var i = 0, j = offset; i < numEdgyOrbs; i++, j += 3) {
+
+        var object = THREE.edgyOrbs[i];
+
+        new TWEEN.Tween(object.position).to({
+          x: THREE.edgyOrbPositions[j],
+          y: THREE.edgyOrbPositions[j + 1],
+          z: THREE.edgyOrbPositions[j + 2]
+        }, duration).easing(TWEEN.Easing.Exponential.InOut).start();
+      }
+
+      new TWEEN.Tween(this).to({}, duration).onComplete(transition).start();
+
+      currentSegThree = (currentSegThree + 1) % 2;
     }
 
     transition();
@@ -937,35 +1005,10 @@ function init() {
     }
   }
 
-  function transition() {
-    var offset = currentSegThree * numEdgyOrbs * 3;
-    var duration = 3000;
-    if (currentSegThree === 0) {
-      duration = 25000;
-    }
-
-    for (var i = 0, j = offset; i < numEdgyOrbs; i++, j += 3) {
-
-      var object = THREE.edgyOrbs[i];
-
-      new TWEEN.Tween(object.position).to({
-        x: THREE.edgyOrbPositions[j],
-        y: THREE.edgyOrbPositions[j + 1],
-        z: THREE.edgyOrbPositions[j + 2]
-      }, duration).easing(TWEEN.Easing.Exponential.InOut).start();
-    }
-
-    new TWEEN.Tween(this).to({}, duration).onComplete(transition).start();
-
-    currentSegThree = (currentSegThree + 1) % 2;
-  }
-
-  // controls
-
-  THREE.controls = new THREE.OrbitControls(camera, renderer.domElement);
-  THREE.controls.center.set(0, 0, 0);
-  THREE.controls.userRotate = false;
-  THREE.controls.userZoom = false;
+  setTimeout(function () {
+    isLoaded = true;
+    animateCamera(0, 4);
+  }, 1500);
 }
 
 function animate() {
