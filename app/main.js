@@ -22,6 +22,7 @@ var raycaster = new THREE.Raycaster();
 var currentSegThree = 0;
 var numEdgyOrbs = 0;
 var isLoaded = false;
+var mousePos = 0;
 
 SEGMENTS = [[0, 0, 50], [0, 0, 125], [0, 0, 200], [0, 0, 275], ['link']];
 
@@ -173,11 +174,12 @@ function loaded() {
   jQuery(document).on('keydown', keyDown);
 
   function animateCamera (index, speed) {
+    mousePos = camera.position.x - SEGMENTS[currentIndex][0];
     if (speed === undefined) {
       speed = 2;
     }
     TweenMax.to(camera.position, speed, {
-      x: SEGMENTS[index][0],
+      x: SEGMENTS[index][0] + mousePos,
       y: SEGMENTS[index][1],
       z: SEGMENTS[index][2]
     })
@@ -660,8 +662,10 @@ function loaded() {
   }, 1500);
 }
 
+var begun = false;
 function animate() {
   requestAnimationFrame(animate);
+
   // mouseOverInteract();
 
   // segment 0 spin tetrahedrons, -glitch-out-
@@ -674,9 +678,11 @@ function animate() {
     //   THREE.triangles[i].rotation.x += rotX;
     //   THREE.triangles[i].rotation.y -= rotY;
     // } else {
+    if (!THREE.triangles[i].selected) {
       THREE.triangles[i].rotation.x += THREE.triangles[i].rotX / 2;
       THREE.triangles[i].rotation.y -= THREE.triangles[i].rotY / 2;
       THREE.triangles[i].position.x += ((Math.cos(cameraMoveY) * .01) * Math.random());
+    }
 
     // }
 
@@ -762,35 +768,42 @@ function animate() {
     tetrahedron.rotation.y += .025;
   }
 
-  function mouseOverInteract() {
-      // update the picking ray with the camera and mouse position
-  	raycaster.setFromCamera( mouse, camera );
-
-  	// calculate objects intersecting the picking ray
-  	var intersects = raycaster.intersectObjects( scene.children );
-
-    if ( intersects.length > 0 ) {
-
-			if ( INTERSECTED != intersects[ 0 ].object ) {
-
-				if ( INTERSECTED ) {
-          INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
-        }
-				INTERSECTED = intersects[ 0 ].object;
-				INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-				INTERSECTED.material.emissive.setHex( 0xff0000 );
-
-			}
-
-		} else {
-
-			if ( INTERSECTED ) {
-        // INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
-      }
-			INTERSECTED = null;
-
-		}
-  }
+  // function mouseOverInteract() {
+  //     // update the picking ray with the camera and mouse position
+  // 	raycaster.setFromCamera( mouse, camera );
+  //
+  // 	// calculate objects intersecting the picking ray
+  // 	var intersects = raycaster.intersectObjects( scene.children );
+  //
+  //   if ( intersects.length > 0 ) {
+  //
+	// 		if ( INTERSECTED != intersects[ 0 ] ) {
+  //
+	// 			if ( INTERSECTED ) {
+  //         TweenMax.to(INTERSECTED.rotation.x, 2, {
+  //           x: (INTERSECTED.rotation.x + (INTERSECTED.rotX / 2) * 50),
+  //           onComplete: function() {
+  //             INTERSECTED.selected = false;
+  //           }
+  //         })
+  //       }
+	// 			INTERSECTED = intersects[ 0 ];
+  //       TweenMax.to(INTERSECTED.rotation.x, 2, {
+  //         x: (INTERSECTED.rotation.x + ((INTERSECTED.rotX / 2) * 50)
+  //       })
+  //       INTERSECTED.selected = true;
+  //
+	// 		}
+  //
+	// 	} else {
+  //
+	// 		if ( INTERSECTED ) {
+  //       // INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+  //     }
+	// 		INTERSECTED = null;
+  //
+	// 	}
+  // }
 
   camera.position.y += Math.cos(cameraMoveY) / 50;
   cameraMoveY += 0.02;
